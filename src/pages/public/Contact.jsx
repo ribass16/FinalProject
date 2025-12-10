@@ -1,0 +1,235 @@
+const Contact = () => {
+  return (
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-black text-gray-900 mb-4">
+            Entre em Contacto
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Estamos aqui para ajudar. Visite-nos, ligue ou envie um email
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Informações de Contacto */}
+          <div className="space-y-6">
+            {/* Endereço */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                  📍
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Morada</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Av. João de Belas 37C<br />
+                    2605-209 Belas<br />
+                    Portugal
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Telefone */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                  📞
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Telefone</h3>
+                  <a
+                    href="tel:+351912345678"
+                    className="text-gray-600 hover:text-blue-600 transition-colors block mb-1"
+                  >
+                    +351 912 345 678
+                  </a>
+                  <a
+                    href="tel:+351213456789"
+                    className="text-gray-600 hover:text-blue-600 transition-colors block"
+                  >
+                    +351 21 345 6789
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+              {/* Instagram */}
+              <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+                <div className="flex items-start gap-4">
+                  <div className="bg-gradient-to-r from-pink-500 to-rose-600 text-white w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+                      <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5-2.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Instagram</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      <a href="https://www.instagram.com/amaralcar_2021/?igsh=MXZsa2w2bDV0YnhmbA%3D%3D" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">@amaralcar_2021</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            {/* Email */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                  ✉️
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
+                  <a
+                    href="mailto:info@carpoint.pt"
+                    className="text-gray-600 hover:text-blue-600 transition-colors block mb-1"
+                  >
+                    info@carpoint.pt
+                  </a>
+                  <a
+                    href="mailto:vendas@carpoint.pt"
+                    className="text-gray-600 hover:text-blue-600 transition-colors block"
+                  >
+                    vendas@carpoint.pt
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Horário */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-r from-orange-500 to-red-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                  🕐
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Horário de Funcionamento</h3>
+                  <div className="text-gray-600 space-y-1">
+                    <p><strong>Sábado:</strong> Encerrado</p>
+                    <p><strong>Domingo:</strong> Encerrado</p>
+                    <p><strong>Segunda-feira:</strong> 09:30–19:30</p>
+                    <p><strong>Terça-feira:</strong> 09:30–19:30</p>
+                    <p><strong>Quarta-feira:</strong> 09:30–19:30</p>
+                    <p><strong>Quinta-feira:</strong> 09:30–19:30</p>
+                    <p><strong>Sexta-feira:</strong> 09:30–19:30</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Redes Sociais */}
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Redes Sociais</h3>
+              <div className="flex gap-4">
+                <a
+                  href="https://www.instagram.com/amaralcar_2021/?igsh=MXZsa2w2bDV0YnhmbA%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors border border-gray-200"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-7 h-7 text-pink-600" fill="currentColor">
+                    <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5-2.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Mapa */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[600px] lg:h-auto relative">
+            {/* Map wrapper: iframe uses the business address so the pin matches the Contact info */}
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(
+                'Av. João de Belas 37C, 2605-209 Belas, Portugal'
+              )}&output=embed`}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Localização CarPoint"
+            ></iframe>
+
+            {/* Controls: Abrir no Maps / Direções */}
+            <div className="absolute top-4 right-4 z-20 flex gap-3">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  'Av. João de Belas 37C, 2605-209 Belas, Portugal'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold shadow-md hover:shadow-lg transition"
+                title="Abrir no Google Maps"
+              >
+                Abrir no Maps
+              </a>
+
+              <button
+                onClick={() => {
+                  const destination = 'Av. João de Belas 37C, 2605-209 Belas, Portugal';
+                  const destParam = encodeURIComponent(destination);
+
+                  // Tentar obter localização do utilizador para preencher a origem
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (pos) => {
+                        const { latitude, longitude } = pos.coords;
+                        const origin = `${latitude},${longitude}`;
+                        const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destParam}&travelmode=driving`;
+                        window.open(url, '_blank');
+                      },
+                      () => {
+                        // Se o utilizador negar ou ocorrer erro, abrir a página de direções sem origem
+                        const url = `https://www.google.com/maps/dir/?api=1&destination=${destParam}&travelmode=driving`;
+                        window.open(url, '_blank');
+                      },
+                      { timeout: 8000 }
+                    );
+                  } else {
+                    const url = `https://www.google.com/maps/dir/?api=1&destination=${destParam}&travelmode=driving`;
+                    window.open(url, '_blank');
+                  }
+                }}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-red-700 transition"
+                title="Obter direções"
+              >
+                Direções
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-16 bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-12 text-center text-white shadow-2xl">
+          <h2 className="text-4xl font-black mb-4">Visite o Nosso Stand</h2>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Venha conhecer pessoalmente a nossa seleção de veículos e esclareça todas as suas dúvidas com a nossa equipa
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a
+              href="https://wa.me/351912345678"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl inline-flex items-center gap-3"
+            >
+              <span className="text-2xl">💬</span>
+              <span>WhatsApp</span>
+            </a>
+            <a
+              href="tel:+351912345678"
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
+            >
+              <span className="text-2xl">📞</span>
+              <span>Ligar Agora</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Contact;

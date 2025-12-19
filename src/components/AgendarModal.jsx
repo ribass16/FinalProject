@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createAgendamento } from '../services/agendamentoService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
+import { useAuth } from '../contexts/AuthContext';
 
 const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { userProfile } = useAuth();
 
-  const { values, errors, handleChange, handleSubmit } = useForm(
+  const { values, errors, handleChange, handleSubmit, setValues } = useForm(
     {
       nome: '',
       email: '',
@@ -20,6 +22,18 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
     },
     validateAgendamento
   );
+
+  // Pre-preenche dados se usuario estiver logado
+  useEffect(() => {
+    if (userProfile && isOpen) {
+      setValues(prev => ({
+        ...prev,
+        nome: userProfile.nome || '',
+        email: userProfile.email || '',
+        telefone: userProfile.telefone || ''
+      }));
+    }
+  }, [userProfile, isOpen, setValues]);
 
   const onSubmit = async () => {
     setSubmitting(true);

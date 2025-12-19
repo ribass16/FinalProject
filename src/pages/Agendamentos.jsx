@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { subscribeAgendamentos, updateAgendamentoStatus, deleteAgendamento } from '../services/agendamentoService';
+import { sendConfirmacaoEmail, sendRecusaEmail } from '../services/emailService';
 
 const Agendamentos = () => {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -12,9 +13,16 @@ const Agendamentos = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleUpdateStatus = async (id, novoStatus) => {
+  const handleUpdateStatus = async (id, novoStatus, agendamento) => {
     const result = await updateAgendamentoStatus(id, novoStatus);
-    if (!result.success) {
+    if (result.success) {
+      // Envia email se for confirmado ou cancelado
+      if (novoStatus === 'confirmado') {
+        await sendConfirmacaoEmail(agendamento);
+      } else if (novoStatus === 'cancelado') {
+        await sendRecusaEmail(agendamento);
+      }
+    } else {
       alert('Erro ao atualizar status');
     }
   };
@@ -137,7 +145,7 @@ const Agendamentos = () => {
                   <div className="flex gap-2 mt-4">
                     {agendamento.status === 'pendente' && (
                       <button
-                        onClick={() => handleUpdateStatus(agendamento.id, 'confirmado')}
+                        onClick={() => handleUpdateStatus(agendamento.id, 'confirmado', agendamento)}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
                       >
                         Confirmar
@@ -145,14 +153,14 @@ const Agendamentos = () => {
                     )}
                     {agendamento.status === 'confirmado' && (
                       <button
-                        onClick={() => handleUpdateStatus(agendamento.id, 'concluido')}
+                        onClick={() => handleUpdateStatus(agendamento.id, 'concluido', agendamento)}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
                       >
                         Marcar como Concluído
                       </button>
                     )}
                     <button
-                      onClick={() => handleUpdateStatus(agendamento.id, 'cancelado')}
+                      onClick={() => handleUpdateStatus(agendamento.id, 'cancelado', agendamento)}
                       className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
                     >
                       Cancelar

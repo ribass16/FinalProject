@@ -1,4 +1,3 @@
-// src/components/public/Navbar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
@@ -6,10 +5,10 @@ import { useAuth } from "../../contexts/AuthContext";
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, userProfile, logout } = useAuth();
+  const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -31,7 +30,6 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
-            <span className="text-4xl">🏎️</span>
             <div>
               <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Amaralcar
@@ -55,19 +53,52 @@ const Navbar = () => {
                 <span>{link.label}</span>
               </Link>
             ))}
-            <button
-              onClick={() => {
-                if (user) {
-                  navigate('/admin');
-                } else {
-                  navigate('/login');
-                }
-              }}
-              className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
-            >
-              <span>🔐</span>
-              <span>{user ? 'Admin' : 'Entrar'}</span>
-            </button>
+            
+            {user && userProfile?.role === 'cliente' && (
+              <Link
+                to="/favoritos"
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                  isActive('/favoritos')
+                    ? "bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span></span>
+                <span>Favoritos</span>
+              </Link>
+            )}
+
+            {user ? (
+              <div className="flex items-center gap-3">
+                {userProfile?.role === 'admin' && (
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
+                  >
+                    <span>🔐</span>
+                    <span>Admin</span>
+                  </button>
+                )}
+                <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg">
+                  <span>👤</span>
+                  <span className="font-semibold text-gray-900">{userProfile?.nome || user.email}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300"
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
+              >
+                <span>🔐</span>
+                <span>Entrar</span>
+              </button>
+            )}
           </div>
 
           <button

@@ -13,7 +13,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f3f4f6;
-  overflow-x: hidden; /* Remove scroll horizontal */
+  overflow-x: hidden; 
 }
 
 #root {
@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
 }
 
-/* Ocultar scrollbars (Chrome, Edge, Safari) */
+
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
@@ -32,7 +32,7 @@ html {
   scrollbar-width: none;
 }
 
-/* Prevenir scroll horizontal em todo o documento */
+
 html, body {
   overflow-x: hidden;
 }

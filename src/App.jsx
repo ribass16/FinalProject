@@ -20,6 +20,7 @@ import Inventory from "./pages/public/Inventory";
 import CarDetails from "./pages/public/CarDetails";
 import Contact from "./pages/public/Contact";
 import Agendar from "./pages/public/Agendar";
+import Favoritos from "./pages/public/Favoritos";
 
 import "./App.css";
 
@@ -69,6 +70,7 @@ function App() {
             </PublicLayout>
           }
         />
+        <Route path="/favoritos" element={<Favoritos />} />
 
         {/* Rotas admin */}
         <Route

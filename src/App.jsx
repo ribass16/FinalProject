@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -12,6 +11,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import CarsManagement from "./pages/CarsManagement";
 import CarForm from "./pages/CarForm";
+import Agendamentos from "./pages/Agendamentos";
 
 // Public Components
 import PublicLayout from "./components/public/PublicLayout";
@@ -19,6 +19,7 @@ import Home from "./pages/public/Home";
 import Inventory from "./pages/public/Inventory";
 import CarDetails from "./pages/public/CarDetails";
 import Contact from "./pages/public/Contact";
+import Agendar from "./pages/public/Agendar";
 
 import "./App.css";
 
@@ -60,6 +61,14 @@ function App() {
             </PublicLayout>
           }
         />
+        <Route
+          path="/agendar"
+          element={
+            <PublicLayout>
+              <Agendar />
+            </PublicLayout>
+          }
+        />
 
         {/* Rotas admin */}
         <Route
@@ -98,6 +107,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <CarForm />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/agendamentos"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Agendamentos />
               </Layout>
             </ProtectedRoute>
           }

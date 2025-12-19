@@ -83,9 +83,6 @@ const Footer = () => {
           <p className="text-gray-400 text-sm">
             © {currentYear} <span className="font-bold text-white">Amaralcar</span>. Todos os direitos reservados.
           </p>
-          <p className="text-gray-500 text-xs mt-2">
-            Desenvolvido com ❤️ para oferecer a melhor experiência
-          </p>
         </div>
       </div>
     </footer>

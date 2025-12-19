@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebaseClient";
+import AgendarModal from "../../components/AgendarModal";
 
 const CarDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAgendarModal, setShowAgendarModal] = useState(false);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -181,6 +183,13 @@ const CarDetails = () => {
               {/* Botões de Contacto */}
               <div className="space-y-3">
                 <button
+                  onClick={() => setShowAgendarModal(true)}
+                  className="w-full bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+                >
+                  <span className="text-2xl">📅</span>
+                  <span>Agendar Visita</span>
+                </button>
+                <button
                   onClick={handleContact}
                   className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
                 >
@@ -217,6 +226,14 @@ const CarDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Agendamento */}
+      <AgendarModal 
+        isOpen={showAgendarModal}
+        onClose={() => setShowAgendarModal(false)}
+        carId={car.id}
+        carName={`${car.brand} ${car.model}`}
+      />
     </div>
   );
 };

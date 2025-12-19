@@ -1,4 +1,4 @@
-// src/services/firestoreService.js
+
 import { db } from "./firebaseClient";
 import { 
   collection, 
@@ -12,10 +12,10 @@ import {
   orderBy 
 } from "firebase/firestore";
 
-// Referência à coleção
+
 const automoveisRef = collection(db, "automoveis");
 
-// Escuta em tempo real
+// atualiza em tempo real
 export const subscribeAutomoveis = (callback) => {
   const q = query(automoveisRef, orderBy("createdAt", "desc"));
   
@@ -30,7 +30,7 @@ export const subscribeAutomoveis = (callback) => {
   return unsubscribe;
 };
 
-// Buscar todos os automóveis (uma vez)
+
 export const getAllAutomoveis = async () => {
   try {
     const snapshot = await getDocs(automoveisRef);
@@ -41,7 +41,7 @@ export const getAllAutomoveis = async () => {
   }
 };
 
-// Adicionar novo automóvel
+// Adicionar novo carro
 export const addAutomovel = async (carData) => {
   try {
     const docRef = await addDoc(automoveisRef, {
@@ -56,7 +56,7 @@ export const addAutomovel = async (carData) => {
   }
 };
 
-// Atualizar automóvel existente
+// Atualizar carro existente
 export const updateAutomovel = async (id, carData) => {
   try {
     const docRef = doc(db, "automoveis", id);
@@ -71,14 +71,14 @@ export const updateAutomovel = async (id, carData) => {
   }
 };
 
-// Deletar automóvel
+// Apagar carro
 export const deleteAutomovel = async (id) => {
   try {
     const docRef = doc(db, "automoveis", id);
     await deleteDoc(docRef);
     return { success: true };
   } catch (error) {
-    console.error("Erro ao deletar automóvel:", error);
+    console.error("Erro ao apagar automovel:", error);
     return { success: false, error: error.message };
   }
 };

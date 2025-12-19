@@ -1,4 +1,3 @@
-// src/components/public/CarCard.jsx
 import { Link } from "react-router-dom";
 
 const CarCard = ({ car }) => {
@@ -16,7 +15,7 @@ const CarCard = ({ car }) => {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-6xl">
-            🚗
+            
           </div>
         )}
         

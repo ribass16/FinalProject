@@ -1,16 +1,29 @@
 // src/components/Sidebar.jsx
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
   const menuItems = [
     { path: "/admin", label: "Dashboard" },
     { path: "/admin/cars", label: "Gestão de Carros" },
     { path: "/admin/add-car", label: "Adicionar Carro" },
+    { path: "/admin/agendamentos", label: "Agendamentos" },
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Erro ao sair:', error);
+    }
+  };
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 z-50">
@@ -35,9 +48,34 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
+
+        {/* Separador */}
+        <div className="my-4 border-t border-gray-200"></div>
+
+        {/* Ver site publico */}
+        <Link
+          to="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+        >
+          🌐 Ver Site Público
+        </Link>
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 space-y-3">
+        {/* Botao de Logout */}
+        <button
+          onClick={handleLogout}
+          className="w-full px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+        >
+          Sair
+        </button>
+        
+        {user?.email && (
+          <p className="text-xs text-gray-500 text-center truncate">{user.email}</p>
+        )}
+        
         <p className="text-xs text-gray-500 text-center">Amaralcar © 2025</p>
       </div>
     </aside>

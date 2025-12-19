@@ -3,11 +3,11 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../services/firebaseConfig';
 
-// Inicializa Firebase (idempotente: se já estiver inicializado, não faz nada de novo)
+// Inicializa Firebase 
 try {
   initializeApp(firebaseConfig);
 } catch (e) {
-  // ignore se já inicializado
+  
 }
 
 const auth = getAuth();

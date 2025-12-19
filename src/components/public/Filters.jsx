@@ -2,15 +2,8 @@
 const Filters = ({ filters, setFilters, cars }) => {
   const categories = [...new Set(cars.map(car => car.category).filter(Boolean))];
   
-  const priceRanges = [
-    { label: "Todos os preços", min: 0, max: Infinity },
-    { label: "Até €10.000", min: 0, max: 10000 },
-    { label: "€10.000 - €20.000", min: 10000, max: 20000 },
-    { label: "€20.000 - €30.000", min: 20000, max: 30000 },
-    { label: "€30.000 - €50.000", min: 30000, max: 50000 },
-    { label: "Mais de €50.000", min: 50000, max: Infinity },
-  ];
-
+  const maxPrice = 200000; 
+  
   const handleCategoryChange = (category) => {
     setFilters({ ...filters, category });
   };
@@ -19,8 +12,26 @@ const Filters = ({ filters, setFilters, cars }) => {
     setFilters({ ...filters, availability });
   };
 
-  const handlePriceRangeChange = (range) => {
-    setFilters({ ...filters, priceRange: range });
+  const handleMinPriceChange = (value) => {
+    const minPrice = value === "" ? 0 : Number(value);
+    setFilters({ 
+      ...filters, 
+      priceRange: { 
+        min: minPrice, 
+        max: filters.priceRange.max 
+      } 
+    });
+  };
+
+  const handleMaxPriceChange = (value) => {
+    const maxPrice = value === "" ? Infinity : Number(value);
+    setFilters({ 
+      ...filters, 
+      priceRange: { 
+        min: filters.priceRange.min, 
+        max: maxPrice 
+      } 
+    });
   };
 
   const clearFilters = () => {
@@ -75,17 +86,30 @@ const Filters = ({ filters, setFilters, cars }) => {
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-3">Intervalo de Preço</label>
-          <select
-            value={JSON.stringify(filters.priceRange)}
-            onChange={(e) => handlePriceRangeChange(JSON.parse(e.target.value))}
-            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
-          >
-            {priceRanges.map((range, index) => (
-              <option key={index} value={JSON.stringify({ min: range.min, max: range.max })}>
-                {range.label}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-2 items-center">
+            <input
+              type="number"
+              min="0"
+              max={maxPrice}
+              value={filters.priceRange.min}
+              onChange={(e) => handleMinPriceChange(e.target.value)}
+              placeholder="Min"
+              className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+            />
+            <span className="text-gray-400">-</span>
+            <input
+              type="number"
+              min="0"
+              max={maxPrice}
+              value={filters.priceRange.max === Infinity ? "" : filters.priceRange.max}
+              onChange={(e) => handleMaxPriceChange(e.target.value)}
+              placeholder="Max"
+              className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+            />
+          </div>
+          <div className="text-xs text-gray-500 mt-2 text-center">
+            €{filters.priceRange.min.toLocaleString()} - {filters.priceRange.max === Infinity ? "Sem limite" : `€${filters.priceRange.max.toLocaleString()}`}
+          </div>
         </div>
       </div>
     </div>

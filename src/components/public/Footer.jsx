@@ -9,12 +9,9 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-                <div className="flex items-center gap-3 mb-4">
-              <span className="text-5xl">🏎️</span>
-              <div>
-                <h3 className="text-2xl font-black">Amaralcar</h3>
-                <p className="text-sm text-blue-300">O seu stand de confiança</p>
-              </div>
+                <div className="mb-4">
+              <h3 className="text-2xl font-black">Amaralcar</h3>
+              <p className="text-sm text-blue-300">O seu stand de confiança</p>
             </div>
             <p className="text-gray-300 mb-4">
               Encontre o carro dos seus sonhos com as melhores condições do mercado. 

@@ -42,15 +42,13 @@ const Filters = ({ filters, setFilters, cars }) => {
     <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <span>🔍</span>
           <span>Filtros</span>
         </h3>
         <button
           onClick={clearFilters}
-          className="text-sm text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+          className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
         >
-          <span>🔄</span>
-          <span>Limpar Filtros</span>
+          Limpar Filtros
         </button>
       </div>
 

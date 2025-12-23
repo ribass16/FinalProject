@@ -45,41 +45,77 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-600 mt-1">Bem-vindo, {user?.displayName || user?.email}</p>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-2">Bem-vindo, <span className="font-medium">{user?.displayName || user?.email}</span></p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total de Carros</p>
-          <p className="mt-2 text-2xl font-semibold text-gray-900">{totalCars}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Total de Carros</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900">{totalCars}</p>
+            </div>
+            <div className="bg-gray-100 p-3 rounded-lg">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Disponíveis</p>
-          <p className="mt-2 text-2xl font-semibold text-gray-900">{availableCars}</p>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Disponíveis</p>
+              <p className="mt-2 text-3xl font-bold text-green-600">{availableCars}</p>
+            </div>
+            <div className="bg-green-50 p-3 rounded-lg">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Indisponíveis</p>
-          <p className="mt-2 text-2xl font-semibold text-gray-900">{unavailableCars}</p>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Indisponíveis</p>
+              <p className="mt-2 text-3xl font-bold text-red-600">{unavailableCars}</p>
+            </div>
+            <div className="bg-red-50 p-3 rounded-lg">
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Valor Total</p>
-          <p className="mt-2 text-2xl font-semibold text-gray-900">€{totalInventoryValue.toLocaleString()}</p>
+        <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Total</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900">€{totalInventoryValue.toLocaleString()}</p>
+            </div>
+            <div className="bg-gray-100 p-3 rounded-lg">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-4 lg:col-span-1">
-          <h2 className="text-sm font-semibold mb-4 text-gray-900">Carros por Categoria</h2>
-          <div className="space-y-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-1 hover:shadow-md transition-shadow">
+          <h2 className="text-lg font-bold mb-4 text-gray-900">Carros por Categoria</h2>
+          <div className="space-y-3">
             {Object.entries(carsByCategory).map(([category, count]) => (
               <div key={category} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                <span className="text-sm text-gray-700">{category}</span>
-                <span className="text-sm font-medium text-gray-900">{count}</span>
+                <span className="text-sm text-gray-700 font-medium">{category}</span>
+                <span className="text-sm font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded-full">{count}</span>
               </div>
             ))}
             {Object.keys(carsByCategory).length === 0 && (
@@ -88,14 +124,14 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-4 lg:col-span-2">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-gray-900">Últimos Carros</h2>
+            <h2 className="text-lg font-bold text-gray-900">Últimos Carros Adicionados</h2>
             <button
               onClick={() => navigate("/admin/add-car")}
-              className="bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors"
+              className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              Adicionar
+              + Adicionar
             </button>
           </div>
           <div className="space-y-3">

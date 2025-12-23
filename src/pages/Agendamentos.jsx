@@ -54,17 +54,17 @@ const Agendamentos = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-4xl font-black text-gray-900 mb-2">Agendamentos</h1>
-        <p className="text-gray-600">Gerir visitas agendadas pelos clientes</p>
+        <h1 className="text-3xl font-bold text-gray-900">Agendamentos</h1>
+        <p className="text-gray-600 mt-2">Gerir visitas agendadas pelos clientes</p>
       </div>
 
       {/* Filtros */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-sm p-5 mb-6 border border-gray-200">
         <div className="flex gap-3">
           <button
             onClick={() => setFiltro('todos')}
-            className={`px-4 py-2 rounded-lg font-semibold transition ${
-              filtro === 'todos' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            className={`px-5 py-2.5 rounded-lg font-semibold transition-all ${
+              filtro === 'todos' ? 'bg-gray-900 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Todos ({agendamentos.length})
@@ -90,13 +90,13 @@ const Agendamentos = () => {
 
       {/* Lista de Agendamentos */}
       {agendamentosFiltrados.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+        <div className="bg-white rounded-xl shadow-sm p-12 text-center border border-gray-200">
           <p className="text-xl text-gray-600">Nenhum agendamento encontrado</p>
         </div>
       ) : (
         <div className="space-y-4">
           {agendamentosFiltrados.map((agendamento) => (
-            <div key={agendamento.id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div key={agendamento.id} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-200">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">

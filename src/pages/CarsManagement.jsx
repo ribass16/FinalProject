@@ -44,26 +44,26 @@ const CarsManagement = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Gestão de Carros</h1>
-          <p className="text-sm text-gray-600 mt-1">Gerir, editar e organizar o inventário</p>
+          <h1 className="text-3xl font-bold text-gray-900">Gestão de Carros</h1>
+          <p className="text-gray-600 mt-2">Gerir, editar e organizar o inventário</p>
         </div>
         <button
           onClick={() => navigate("/admin/add-car")}
-          className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all hover:shadow-lg"
         >
-          Adicionar Carro
+          + Adicionar Carro
         </button>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
-        <div className="flex gap-2">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
+        <div className="flex gap-3">
           <button
             onClick={() => setFilter("all")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               filter === "all"
-                ? "bg-gray-900 text-white"
+                ? "bg-gray-900 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -71,9 +71,9 @@ const CarsManagement = () => {
           </button>
           <button
             onClick={() => setFilter("available")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               filter === "available"
-                ? "bg-gray-900 text-white"
+                ? "bg-gray-900 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -81,9 +81,9 @@ const CarsManagement = () => {
           </button>
           <button
             onClick={() => setFilter("unavailable")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               filter === "unavailable"
-                ? "bg-gray-900 text-white"
+                ? "bg-gray-900 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -92,33 +92,33 @@ const CarsManagement = () => {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Imagem
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Marca
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Modelo
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Ano
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Preço
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Categoria
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>

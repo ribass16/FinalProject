@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { addAutomovel, updateAutomovel } from "../services/firestoreService";
+import { uploadMultipleImages } from "../services/imgbbService";
 
 const CarForm = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const CarForm = () => {
     category: "Sedan",
     available: true,
     image: "",
+    images: [],
     description: "",
     mileage: "",
     fuel: "Gasolina",
@@ -24,6 +26,9 @@ const CarForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(false);
 
   useEffect(() => {
     if (isEditMode && carToEdit) {
@@ -35,11 +40,17 @@ const CarForm = () => {
         category: carToEdit.category || "Sedan",
         available: carToEdit.available !== undefined ? carToEdit.available : true,
         image: carToEdit.image || "",
+        images: carToEdit.images || [],
         description: carToEdit.description || "",
         mileage: carToEdit.mileage || "",
         fuel: carToEdit.fuel || "Gasolina",
         transmission: carToEdit.transmission || "Manual",
       });
+      
+      // Carregar previews das imagens existentes
+      if (carToEdit.images && carToEdit.images.length > 0) {
+        setImagePreviews(carToEdit.images);
+      }
     }
   }, [isEditMode, carToEdit]);
 
@@ -49,6 +60,36 @@ const CarForm = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setImageFiles(files);
+      
+      // Criar previews locais
+      const previews = [];
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          previews.push(reader.result);
+          if (previews.length === files.length) {
+            setImagePreviews(previews);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeImage = (index) => {
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    setImagePreviews(newPreviews);
+    
+    if (imageFiles.length > 0) {
+      const newFiles = Array.from(imageFiles).filter((_, i) => i !== index);
+      setImageFiles(newFiles);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -62,11 +103,40 @@ const CarForm = () => {
       return;
     }
 
+    let imageUrls = [...(formData.images || [])];
+
+    // Se houver ficheiros para upload, fazer upload primeiro
+    if (imageFiles.length > 0) {
+      setUploadProgress(true);
+      console.log('A fazer upload de', imageFiles.length, 'imagens para ImgBB...');
+      
+      const uploadResult = await uploadMultipleImages(imageFiles);
+      setUploadProgress(false);
+      
+      if (uploadResult.success) {
+        imageUrls = uploadResult.urls;
+        console.log('Upload concluído:', imageUrls);
+        
+        if (uploadResult.failed > 0) {
+          alert(`${uploadResult.failed} de ${uploadResult.total} imagens falharam. Continuando com as restantes.`);
+        }
+      } else {
+        alert('Erro ao fazer upload: ' + (uploadResult.errors ? uploadResult.errors.join(', ') : 'Erro desconhecido'));
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Compatibilidade: usar primeira imagem como 'image' principal
+    const mainImage = imageUrls[0] || formData.image || "";
+
     const carData = {
       ...formData,
       price: parseFloat(formData.price),
       year: parseInt(formData.year),
       mileage: formData.mileage ? parseInt(formData.mileage) : 0,
+      image: mainImage,
+      images: imageUrls,
     };
 
     let result;
@@ -88,55 +158,57 @@ const CarForm = () => {
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-8">
         <button
           onClick={() => navigate("/admin/cars")}
-          className="text-gray-600 hover:text-gray-900 font-medium mb-4 flex items-center gap-2 text-sm"
+          className="text-gray-600 hover:text-gray-900 font-semibold mb-4 flex items-center gap-2 transition-colors"
         >
-          <span>←</span>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
           <span>Voltar</span>
         </button>
-        <h1 className="text-2xl font-semibold text-gray-900">
-          {isEditMode ? "Editar Carro" : "Adicionar Carro"}
+        <h1 className="text-3xl font-bold text-gray-900">
+          {isEditMode ? "Editar Carro" : "Adicionar Novo Carro"}
         </h1>
-        <p className="text-sm text-gray-600 mt-1">Preencha as informações do veículo</p>
+        <p className="text-gray-600 mt-2">Preencha as informações do veículo com atenção</p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Marca *
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Marca <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="brand"
                 value={formData.brand}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 placeholder="Ex: BMW, Mercedes, Audi"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Modelo *
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Modelo <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="model"
                 value={formData.model}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 placeholder="Ex: Serie 3, Classe C"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Ano
               </label>
               <input
@@ -144,22 +216,22 @@ const CarForm = () => {
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 min="1900"
                 max={new Date().getFullYear() + 1}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Preço (€) *
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Preço (€) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 placeholder="Ex: 25000"
                 min="0"
                 step="100"
@@ -168,14 +240,14 @@ const CarForm = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Categoria
               </label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
               >
                 <option value="Sedan">Sedan</option>
                 <option value="SUV">SUV</option>
@@ -187,7 +259,7 @@ const CarForm = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Quilometragem (km)
               </label>
               <input
@@ -195,21 +267,21 @@ const CarForm = () => {
                 name="mileage"
                 value={formData.mileage}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 placeholder="Ex: 50000"
                 min="0"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Combustível
               </label>
               <select
                 name="fuel"
                 value={formData.fuel}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
               >
                 <option value="Gasolina">Gasolina</option>
                 <option value="Diesel">Diesel</option>
@@ -219,14 +291,14 @@ const CarForm = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Transmissão
               </label>
               <select
                 name="transmission"
                 value={formData.transmission}
                 onChange={handleChange}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
               >
                 <option value="Manual">Manual</option>
                 <option value="Automática">Automática</option>
@@ -234,67 +306,114 @@ const CarForm = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              URL da Imagem
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold text-gray-700">
+              Imagens do Carro
             </label>
-            <input
-              type="url"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
-              placeholder="https://exemplo.com/imagem.jpg"
-            />
-            {formData.image && (
-              <img
-                src={formData.image}
-                alt="Preview"
-                className="mt-2 w-32 h-24 object-cover rounded-md border border-gray-200"
-                onError={(e) => (e.target.style.display = "none")}
-              />
+            
+            {/* Upload de múltiplos ficheiros */}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-gray-400 transition-colors">
+              <div className="flex flex-col items-center justify-center">
+                <svg className="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <label className="cursor-pointer">
+                  <span className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all inline-block">
+                    Escolher Imagens do PC
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    onChange={handleFileChange}
+                    multiple
+                    className="hidden"
+                  />
+                </label>
+                <p className="text-sm text-gray-500 mt-3">JPG, PNG ou WEBP (máx. 32MB cada)</p>
+                <p className="text-xs text-gray-400 mt-1">Pode selecionar várias imagens</p>
+                {imageFiles.length > 0 && (
+                  <p className="text-sm text-green-600 font-medium mt-2">{imageFiles.length} {imageFiles.length === 1 ? 'imagem selecionada' : 'imagens selecionadas'}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Preview das imagens */}
+            {imagePreviews.length > 0 && (
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-gray-700">Pré-visualização ({imagePreviews.length} {imagePreviews.length === 1 ? 'imagem' : 'imagens'})</p>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow-sm"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                      {index === 0 && (
+                        <span className="absolute bottom-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                          Principal
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Descrição
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900"
-              rows="3"
-              placeholder="Descrição detalhada do veículo..."
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all resize-none"
+              rows="4"
+              placeholder="Descrição detalhada do veículo, características, equipamentos..."
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <input
               type="checkbox"
               name="available"
               checked={formData.available}
               onChange={handleChange}
-              className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-1 focus:ring-gray-900"
+              className="w-5 h-5 text-gray-900 border-gray-300 rounded focus:ring-2 focus:ring-gray-900"
             />
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-sm font-semibold text-gray-700">
               Carro disponível para venda
             </label>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-4 pt-6 border-t border-gray-200">
             <button
               type="submit"
-              disabled={loading}
-              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 rounded-md text-sm transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              disabled={loading || uploadProgress}
+              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-lg transition-all hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none"
             >
-              {loading ? "A processar..." : isEditMode ? "Atualizar Carro" : "Adicionar Carro"}
+              {uploadProgress ? "A fazer upload das imagens..." : loading ? "A processar..." : isEditMode ? "Atualizar Carro" : "Adicionar Carro"}
             </button>
             <button
               type="button"
               onClick={() => navigate("/admin/cars")}
-              className="flex-1 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 font-medium py-2 rounded-md text-sm transition-colors"
+              className="flex-1 bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-300 font-bold py-4 rounded-lg transition-all hover:shadow-md"
             >
               Cancelar
             </button>

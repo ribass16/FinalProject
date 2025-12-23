@@ -20,9 +20,9 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { path: "/", label: "Início", icon: "🏠" },
-    { path: "/cars", label: "Carros", icon: "🚗" },
-    { path: "/contact", label: "Contacto", icon: "📞" },
+    { path: "/", label: "Início" },
+    { path: "/cars", label: "Carros" },
+    { path: "/contact", label: "Contacto" },
   ];
 
   return (
@@ -49,7 +49,6 @@ const Navbar = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <span>{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             ))}
@@ -63,7 +62,7 @@ const Navbar = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <span></span>
+
                 <span>Favoritos</span>
               </Link>
             )}
@@ -75,12 +74,10 @@ const Navbar = () => {
                     onClick={() => navigate('/admin')}
                     className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
                   >
-                    <span>🔐</span>
                     <span>Admin</span>
                   </button>
                 )}
                 <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg">
-                  <span>👤</span>
                   <span className="font-semibold text-gray-900">{userProfile?.nome || user.email}</span>
                 </div>
                 <button
@@ -95,7 +92,6 @@ const Navbar = () => {
                 onClick={() => navigate('/login')}
                 className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
               >
-                <span>🔐</span>
                 <span>Entrar</span>
               </button>
             )}
@@ -103,9 +99,17 @@ const Navbar = () => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-3xl"
+            className="md:hidden text-gray-900 p-2"
           >
-            {isMenuOpen ? "✕" : "☰"}
+            {isMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
           </button>
         </div>
 
@@ -122,7 +126,6 @@ const Navbar = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <span className="mr-2">{link.icon}</span>
                 {link.label}
               </Link>
             ))}
@@ -134,7 +137,6 @@ const Navbar = () => {
               }}
               className="block w-full text-left bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold"
             >
-              <span className="mr-2">🔐</span>
               {user ? 'Admin' : 'Entrar'}
             </button>
           </div>

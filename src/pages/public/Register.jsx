@@ -57,26 +57,39 @@ const Register = () => {
     
     setLoading(true);
     try {
+      console.log('Registando utilizador...', formData.email);
       const userCredential = await register(formData.email, formData.password);
+      console.log('Utilizador criado:', userCredential.user.uid);
       
       // Define role baseado no email
       const isAdmin = formData.email.toLowerCase().includes('admin');
       
-      // Criar perfil do usuario no Firestore
-      await createUserProfile(userCredential.user.uid, {
+      const profileData = {
         nome: formData.nome,
         email: formData.email,
         telefone: formData.telefone,
         role: isAdmin ? 'admin' : 'cliente'
-      });
+      };
       
-      // Redireciona baseado no role
-      if (isAdmin) {
-        navigate('/admin');
+      console.log('Criando perfil no Firestore:', profileData);
+      
+      // Criar perfil do usuario no Firestore
+      const result = await createUserProfile(userCredential.user.uid, profileData);
+      
+      if (result.success) {
+        console.log('Perfil criado com sucesso!');
+        // Redireciona baseado no role
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/');
+        console.error('Erro ao criar perfil:', result.error);
+        alert('Conta criada mas erro ao salvar perfil: ' + result.error);
       }
     } catch (err) {
+      console.error('Erro no registo:', err);
       alert(err.message || 'Erro ao registar');
     } finally {
       setLoading(false);

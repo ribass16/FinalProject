@@ -91,7 +91,6 @@ const Agendamentos = () => {
       {/* Lista de Agendamentos */}
       {agendamentosFiltrados.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-          <div className="text-6xl mb-4">📅</div>
           <p className="text-xl text-gray-600">Nenhum agendamento encontrado</p>
         </div>
       ) : (

@@ -55,11 +55,9 @@ const Sidebar = () => {
         {/* Ver site publico */}
         <Link
           to="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+          className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
         >
-          🌐 Ver Site Público
+          Voltar ao Site
         </Link>
       </nav>
 

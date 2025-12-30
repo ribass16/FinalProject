@@ -1,14 +1,30 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showProfilePulse, setShowProfilePulse] = useState(false);
   const { user, userProfile, logout } = useAuth();
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
+
+  // Verificar se e um novo utilizador e mostrar animação
+  useEffect(() => {
+    if (user && userProfile) {
+      const isNewUser = localStorage.getItem(`newUser_${user.uid}`);
+      if (isNewUser === 'true') {
+        setShowProfilePulse(true);
+        // Remover animação após 10 segundos
+        setTimeout(() => {
+          setShowProfilePulse(false);
+          localStorage.removeItem(`newUser_${user.uid}`);
+        }, 10000);
+      }
+    }
+  }, [user, userProfile]);
 
   const handleLogout = async () => {
     try {
@@ -77,8 +93,28 @@ const Navbar = () => {
                     <span>Admin</span>
                   </button>
                 )}
-                <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg">
-                  <span className="font-semibold text-gray-900">{userProfile?.nome || user.email}</span>
+                <div className="relative">
+                  <button
+                    onClick={() => navigate('/profile')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                      isActive('/profile')
+                        ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                    } ${showProfilePulse ? 'animate-pulse ring-4 ring-blue-400' : ''}`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span>{userProfile?.nome || user.email}</span>
+                  </button>
+                  {showProfilePulse && (
+                    <div className="absolute -top-1 -right-1">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={handleLogout}
@@ -129,16 +165,79 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => {
-                setIsMenuOpen(false);
-                if (user) navigate('/admin');
-                else navigate('/login');
-              }}
-              className="block w-full text-left bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold"
-            >
-              {user ? 'Admin' : 'Entrar'}
-            </button>
+            
+            {user && userProfile?.role === 'cliente' && (
+              <Link
+                to="/favoritos"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block px-4 py-3 rounded-lg font-semibold mb-2 transition-all duration-300 ${
+                  isActive('/favoritos')
+                    ? "bg-gradient-to-r from-gray-900 to-gray-700 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                Favoritos
+              </Link>
+            )}
+
+            {user ? (
+              <>
+                {userProfile?.role === 'admin' && (
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/admin');
+                    }}
+                    className="block w-full text-left bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold mb-2"
+                  >
+                    Admin
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/profile');
+                  }}
+                  className={`block w-full text-left px-4 py-3 rounded-lg font-semibold mb-2 transition-all duration-300 ${
+                    isActive('/profile')
+                      ? "bg-gradient-to-r from-gray-900 to-gray-700 text-white"
+                      : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                  } ${showProfilePulse ? 'animate-pulse ring-4 ring-blue-400' : ''}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span>{userProfile?.nome || user.email}</span>
+                    {showProfilePulse && (
+                      <span className="ml-auto relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                      </span>
+                    )}
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="block w-full text-left bg-red-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-red-700"
+                >
+                  Sair
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate('/login');
+                }}
+                className="block w-full text-left bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold"
+              >
+                Entrar
+              </button>
+            )}
           </div>
         )}
       </div>

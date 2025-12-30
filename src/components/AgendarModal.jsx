@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { userProfile } = useAuth();
+  const { user, userProfile } = useAuth();
 
   const { values, errors, handleChange, handleSubmit, setValues } = useForm(
     {
@@ -23,7 +23,7 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
     validateAgendamento
   );
 
-  // Pre-preenche dados se usuario estiver logado
+  // Pre-preenche dados se utilizador estiver logado
   useEffect(() => {
     if (userProfile && isOpen) {
       setValues(prev => ({
@@ -37,7 +37,14 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
 
   const onSubmit = async () => {
     setSubmitting(true);
-    const result = await createAgendamento(values);
+    
+    // Adiciona userId se o utilizador estiver logado
+    const agendamentoData = {
+      ...values,
+      userId: user?.uid || null
+    };
+    
+    const result = await createAgendamento(agendamentoData);
     
     if (result.success) {
       setSuccess(true);

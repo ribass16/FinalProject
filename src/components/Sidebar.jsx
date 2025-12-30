@@ -1,20 +1,33 @@
 // src/components/Sidebar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useState, useEffect } from "react";
+import { subscribeAgendamentos } from "../services/agendamentoService";
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const [pendingCount, setPendingCount] = useState(0);
 
   const menuItems = [
     { path: "/admin", label: "Dashboard" },
     { path: "/admin/cars", label: "Gestão de Carros" },
     { path: "/admin/add-car", label: "Adicionar Carro" },
-    { path: "/admin/agendamentos", label: "Agendamentos" },
+    { path: "/admin/agendamentos", label: "Agendamentos", hasBadge: true },
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  // Monitorar agendamentos pendentes
+  useEffect(() => {
+    const unsubscribe = subscribeAgendamentos((agendamentos) => {
+      const pending = agendamentos.filter((a) => a.status === "pendente").length;
+      setPendingCount(pending);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -37,13 +50,18 @@ const Sidebar = () => {
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.path)
                     ? "bg-gray-900 text-white"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.hasBadge && pendingCount > 0 && (
+                  <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse">
+                    {pendingCount}
+                  </span>
+                )}
               </Link>
             </li>
           ))}

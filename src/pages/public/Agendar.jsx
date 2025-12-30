@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { createAgendamento } from '../../services/agendamentoService';
 import { useForm } from '../../hooks/useForm';
+import { useAuth } from '../../contexts/AuthContext';
 
 const validateAgendamento = (values) => {
   const errors = {};
@@ -29,6 +30,7 @@ const Agendar = () => {
   const [searchParams] = useSearchParams();
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { user } = useAuth();
 
   const carId = searchParams.get('car');
   const carModel = searchParams.get('model');
@@ -59,7 +61,14 @@ const Agendar = () => {
 
   const onSubmit = async () => {
     setSubmitting(true);
-    const result = await createAgendamento(values);
+    
+    // Mete userid se o utilizador estiver logado
+    const agendamentoData = {
+      ...values,
+      userId: user?.uid || null
+    };
+    
+    const result = await createAgendamento(agendamentoData);
     
     if (result.success) {
       setSuccess(true);

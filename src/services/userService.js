@@ -1,7 +1,7 @@
 import { db } from "./firebaseClient";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
-// Criar ou atualizar perfil de usuario
+// Atulizar perfil 
 export const createUserProfile = async (userId, userData) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -16,7 +16,7 @@ export const createUserProfile = async (userId, userData) => {
   }
 };
 
-// Buscar perfil de usuario
+
 export const getUserProfile = async (userId) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -25,7 +25,7 @@ export const getUserProfile = async (userId) => {
     if (userSnap.exists()) {
       return { success: true, data: userSnap.data() };
     } else {
-      return { success: false, error: "Usuario nao encontrado" };
+      return { success: false, error: "Utilizador nao encontrado" };
     }
   } catch (error) {
     console.error("Erro ao buscar perfil:", error);
@@ -33,7 +33,7 @@ export const getUserProfile = async (userId) => {
   }
 };
 
-// Atualizar perfil de usuario
+// Atualizar perfil
 export const updateUserProfile = async (userId, userData) => {
   try {
     const userRef = doc(db, "users", userId);

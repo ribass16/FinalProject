@@ -1,4 +1,3 @@
-//filtros
 const Filters = ({ filters, setFilters, cars }) => {
   const categories = [...new Set(cars.map(car => car.category).filter(Boolean))];
   

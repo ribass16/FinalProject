@@ -7,7 +7,9 @@ import {
   orderBy,
   updateDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  getDocs,
+  where
 } from "firebase/firestore";
 
 const agendamentosRef = collection(db, "agendamentos");
@@ -64,6 +66,24 @@ export const deleteAgendamento = async (id) => {
     return { success: true };
   } catch (error) {
     console.error("Erro ao apagar agendamento:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Buscar agendamentos de um utilizador específico
+export const getUserAgendamentos = async (userId) => {
+  try {
+    const q = query(agendamentosRef, where("userId", "==", userId));
+    const snapshot = await getDocs(q);
+    
+    const agendamentos = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    
+    return { success: true, data: agendamentos };
+  } catch (error) {
+    console.error("Erro ao buscar agendamentos do utilizador:", error);
     return { success: false, error: error.message };
   }
 };

@@ -73,11 +73,15 @@ const Register = () => {
       
       console.log('Criando perfil no Firestore:', profileData);
       
-      // Criar perfil do usuario no Firestore
+      
       const result = await createUserProfile(userCredential.user.uid, profileData);
       
       if (result.success) {
         console.log('Perfil criado com sucesso!');
+        
+        // Marcar como novo utilizador para mostrar animação
+        localStorage.setItem(`newUser_${userCredential.user.uid}`, 'true');
+        
         // Redireciona baseado no role
         if (isAdmin) {
           navigate('/admin');

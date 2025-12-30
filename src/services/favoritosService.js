@@ -44,7 +44,7 @@ export const removeFavorito = async (userId, carId) => {
   }
 };
 
-// Escutar favoritos do usuario
+// Escutar favoritos do utilizador
 export const subscribeFavoritos = (userId, callback) => {
   const q = query(favoritosRef, where("userId", "==", userId));
   

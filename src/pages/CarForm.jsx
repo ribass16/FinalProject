@@ -234,7 +234,7 @@ const CarForm = () => {
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
                 placeholder="Ex: 25000"
                 min="0"
-                step="100"
+                step="1"
                 required
               />
             </div>

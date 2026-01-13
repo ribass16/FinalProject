@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
 import { getUserProfile } from '../services/userService';
 import { app } from '../services/firebaseClient';
 
@@ -35,8 +35,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    // Enviar email de verificação automaticamente
-    await sendEmailVerification(userCredential.user);
+    // Fazer logout após criar conta para que o link não faça auto-login
+    await signOut(auth);
+    await sendEmailVerification(userCredential.user, {
+      url: `${window.location.origin}/email-verified`,
+      handleCodeInApp: false
+    });
     return userCredential;
   };
 
@@ -58,7 +62,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const value = { user, userProfile, loading, register, login, logout, refreshProfile };
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  const value = { user, userProfile, loading, register, login, logout, refreshProfile, resetPassword };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

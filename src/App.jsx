@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Auth pages
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
+import EmailVerified from './pages/EmailVerified';
 
 // Admin Components
 import Layout from "./components/Layout";
@@ -80,12 +81,13 @@ function App() {
             </PublicLayout>
           } 
         />
+        <Route path="/email-verified" element={<EmailVerified />} />
 
         {/* Rotas admin */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute adminOnly={true}>
+            <ProtectedRoute>
               <Layout>
                 <Dashboard />
               </Layout>
@@ -95,7 +97,7 @@ function App() {
         <Route
           path="/admin/cars"
           element={
-            <ProtectedRoute adminOnly={true}>
+            <ProtectedRoute>
               <Layout>
                 <CarsManagement />
               </Layout>
@@ -105,7 +107,7 @@ function App() {
         <Route
           path="/admin/add-car"
           element={
-            <ProtectedRoute adminOnly={true}>
+            <ProtectedRoute>
               <Layout>
                 <CarForm />
               </Layout>
@@ -115,7 +117,7 @@ function App() {
         <Route
           path="/admin/edit-car/:id"
           element={
-            <ProtectedRoute adminOnly={true}>
+            <ProtectedRoute>
               <Layout>
                 <CarForm />
               </Layout>
@@ -125,7 +127,7 @@ function App() {
         <Route
           path="/admin/agendamentos"
           element={
-            <ProtectedRoute adminOnly={true}>
+            <ProtectedRoute>
               <Layout>
                 <Agendamentos />
               </Layout>

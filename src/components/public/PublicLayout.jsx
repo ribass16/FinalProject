@@ -1,4 +1,3 @@
-// src/components/public/PublicLayout.jsx
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 

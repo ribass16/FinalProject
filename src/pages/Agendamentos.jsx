@@ -116,7 +116,7 @@ const Agendamentos = () => {
                       <p className="text-gray-900 font-medium">{agendamento.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Telefone</p>
+                      <p className="text-sm text-gray-500">Telemóvel</p>
                       <p className="text-gray-900 font-medium">{agendamento.telefone}</p>
                     </div>
                     <div>

@@ -69,9 +69,9 @@ export const validateAgendamento = (values) => {
     errors.email = 'Email inválido';
   }
   if (!values.telefone) {
-    errors.telefone = 'Telefone é obrigatório';
+    errors.telefone = 'Telemóvel é obrigatório';
   } else if (values.telefone.length !== 9) {
-    errors.telefone = 'Telefone deve ter exatamente 9 dígitos';
+    errors.telefone = 'Telemóvel deve ter exatamente 9 dígitos';
   }
   if (!values.data) errors.data = 'Data é obrigatória';
   if (!values.hora) errors.hora = 'Hora é obrigatória';

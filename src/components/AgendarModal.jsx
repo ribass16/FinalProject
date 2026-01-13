@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createAgendamento } from '../services/agendamentoService';
+import { createAgendamento, getHorariosOcupados } from '../services/agendamentoService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [horariosOcupados, setHorariosOcupados] = useState([]);
   const { user, userProfile } = useAuth();
 
   const { values, errors, handleChange, handleSubmit, setValues } = useForm(
@@ -34,6 +35,24 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
       }));
     }
   }, [userProfile, isOpen, setValues]);
+
+  // Buscar horários ocupados quando a data mudar
+  useEffect(() => {
+    const fetchHorariosOcupados = async () => {
+      if (values.data && carId) {
+        const result = await getHorariosOcupados(carId, values.data);
+        if (result.success) {
+          setHorariosOcupados(result.data);
+        }
+      } else {
+        setHorariosOcupados([]);
+      }
+    };
+
+    if (isOpen) {
+      fetchHorariosOcupados();
+    }
+  }, [values.data, carId, isOpen]);
 
   const onSubmit = async () => {
     setSubmitting(true);
@@ -141,7 +160,7 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Telefone *
+                Telemóvel *
               </label>
               <input
                 type="tel"
@@ -149,6 +168,8 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
                 value={values.telefone}
                 onChange={handleChange}
                 maxLength={9}
+                pattern="[0-9]*"
+                onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 placeholder="912345678"
               />
@@ -184,17 +205,45 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               >
                 <option value="">Selecione</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
+                <option value="09:00" disabled={horariosOcupados.includes("09:00")}>
+                  09:00 {horariosOcupados.includes("09:00") && "❌ Ocupado"}
+                </option>
+                <option value="10:00" disabled={horariosOcupados.includes("10:00")}>
+                  10:00 {horariosOcupados.includes("10:00") && "❌ Ocupado"}
+                </option>
+                <option value="11:00" disabled={horariosOcupados.includes("11:00")}>
+                  11:00 {horariosOcupados.includes("11:00") && "❌ Ocupado"}
+                </option>
+                <option value="12:00" disabled={horariosOcupados.includes("12:00")}>
+                  12:00 {horariosOcupados.includes("12:00") && "❌ Ocupado"}
+                </option>
+                <option value="14:00" disabled={horariosOcupados.includes("14:00")}>
+                  14:00 {horariosOcupados.includes("14:00") && "❌ Ocupado"}
+                </option>
+                <option value="15:00" disabled={horariosOcupados.includes("15:00")}>
+                  15:00 {horariosOcupados.includes("15:00") && "❌ Ocupado"}
+                </option>
+                <option value="16:00" disabled={horariosOcupados.includes("16:00")}>
+                  16:00 {horariosOcupados.includes("16:00") && "❌ Ocupado"}
+                </option>
+                <option value="17:00" disabled={horariosOcupados.includes("17:00")}>
+                  17:00 {horariosOcupados.includes("17:00") && "❌ Ocupado"}
+                </option>
+                <option value="18:00" disabled={horariosOcupados.includes("18:00")}>
+                  18:00 {horariosOcupados.includes("18:00") && "❌ Ocupado"}
+                </option>
               </select>
               {errors.hora && <p className="text-red-600 text-sm mt-1">{errors.hora}</p>}
+              {horariosOcupados.length > 0 && values.data && (
+                <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800 flex items-center gap-2">
+                    <span>⚠️</span>
+                    <span>
+                      <strong>{horariosOcupados.length}</strong> horário(s) já reservado(s) nesta data
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

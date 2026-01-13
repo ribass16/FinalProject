@@ -198,13 +198,16 @@ const Profile = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Telefone
+                      Telemóvel
                     </label>
                     <input
                       type="tel"
                       name="telefone"
                       value={formData.telefone}
                       onChange={handleChange}
+                      maxLength={9}
+                      pattern="[0-9]*"
+                      onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                     />
                   </div>
@@ -356,7 +359,7 @@ const Profile = () => {
                       <div>
                         <p className="text-sm text-gray-500">Horário</p>
                         <p className="font-semibold text-gray-900">
-                          {agendamento.horario || "Não definido"}
+                          {agendamento.hora || "Não definido"}
                         </p>
                       </div>
                       {agendamento.tipoAgendamento && (

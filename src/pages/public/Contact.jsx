@@ -35,7 +35,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Telefone */}
+            {/* Telemóvel */}
             <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-start gap-4">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -44,7 +44,7 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Telefone</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Telemóvel</h3>
                   <a
                     href="tel:+351912345678"
                     className="text-gray-600 hover:text-blue-600 transition-colors block mb-1"

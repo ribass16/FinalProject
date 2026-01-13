@@ -87,3 +87,23 @@ export const getUserAgendamentos = async (userId) => {
     return { success: false, error: error.message };
   }
 };
+
+// ver horários ocupados para um carro numa data específica
+export const getHorariosOcupados = async (carroId, data) => {
+  try {
+    const q = query(
+      agendamentosRef, 
+      where("carroId", "==", carroId),
+      where("data", "==", data),
+      where("status", "in", ["pendente", "confirmado"]) 
+    );
+    const snapshot = await getDocs(q);
+    
+    const horarios = snapshot.docs.map(doc => doc.data().hora);
+    
+    return { success: true, data: horarios };
+  } catch (error) {
+    console.error("Erro ao buscar horários ocupados:", error);
+    return { success: false, error: error.message };
+  }
+};

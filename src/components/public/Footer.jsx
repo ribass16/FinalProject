@@ -66,7 +66,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <span>✉️</span>
-                <a href="mailto:info@carpoint.pt" className="hover:text-white">info@carpoint.pt</a>
+                <a href="mailto:amaralcarpopup@gmail.com" className="hover:text-white">amaralcarpopup@gmail.com</a>
               </li>
               <li className="flex items-center gap-2">
                 <span>🕐</span>

@@ -1,7 +1,9 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createUserProfile } from '../../services/userService'; 
+import { getUserProfile } from '../../services/userService';
+
 const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -14,6 +16,50 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [waitingVerification, setWaitingVerification] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const verificationInterval = useRef(null);
+
+  // Limpar intervalo ao desmontar
+  useEffect(() => {
+    return () => {
+      if (verificationInterval.current) {
+        clearInterval(verificationInterval.current);
+      }
+    };
+  }, []);
+
+  // Verificar email periodicamente
+  useEffect(() => {
+    if (waitingVerification && currentUser) {
+      verificationInterval.current = setInterval(async () => {
+        try {
+          await currentUser.reload();
+          
+          if (currentUser.emailVerified) {
+            clearInterval(verificationInterval.current);
+            setWaitingVerification(false);
+            
+            // Redirecionar baseado no role
+            if (userRole === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/');
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao verificar email:', error);
+        }
+      }, 3000); // Verificar a cada 3 segundos
+    }
+
+    return () => {
+      if (verificationInterval.current) {
+        clearInterval(verificationInterval.current);
+      }
+    };
+  }, [waitingVerification, currentUser, userRole, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -60,6 +106,7 @@ const Register = () => {
       console.log('Registando utilizador...', formData.email);
       const userCredential = await register(formData.email, formData.password);
       console.log('Utilizador criado:', userCredential.user.uid);
+      console.log('Email enviado para:', formData.email);
       
       // Define role baseado no email
       const isAdmin = formData.email.toLowerCase().includes('admin');
@@ -73,21 +120,17 @@ const Register = () => {
       
       console.log('Criando perfil no Firestore:', profileData);
       
-      
       const result = await createUserProfile(userCredential.user.uid, profileData);
       
       if (result.success) {
         console.log('Perfil criado com sucesso!');
         
-        // Marcar como novo utilizador para mostrar animação
-        localStorage.setItem(`newUser_${userCredential.user.uid}`, 'true');
+        // Guardar dados para redirecionamento posterior
+        setCurrentUser(userCredential.user);
+        setUserRole(isAdmin ? 'admin' : 'cliente');
         
-        // Redireciona baseado no role
-        if (isAdmin) {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        // Mostrar tela de verificação
+        setWaitingVerification(true);
       } else {
         console.error('Erro ao criar perfil:', result.error);
         alert('Conta criada mas erro ao salvar perfil: ' + result.error);
@@ -120,7 +163,62 @@ const Register = () => {
 
           {/* Formulário */}
           <div className="px-8 py-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+            {waitingVerification ? (
+              // Tela de verificação de email
+              <div className="space-y-5">
+                <div className="text-center mb-6">
+                  <div className="inline-block bg-blue-100 rounded-full p-4 mb-4">
+                    <svg className="w-12 h-12 text-blue-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Verifica o teu Email</h3>
+                  <p className="text-gray-600">Enviámos um email para</p>
+                  <p className="text-gray-900 font-semibold mt-1">{currentUser?.email}</p>
+                </div>
+
+                <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl px-6 py-5">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <div className="flex-1">
+                      <p className="text-yellow-900 font-semibold mb-2">Por favor, verifica o teu email</p>
+                      <ol className="text-sm text-yellow-800 space-y-1 list-decimal list-inside">
+                        <li>Abre a tua caixa de entrada</li>
+                        <li>Procura o email de verificação (verifica também o spam)</li>
+                        <li>Clica no link de confirmação</li>
+                        <li>Aguarda... serás redirecionado automaticamente</li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent"></div>
+                    <p className="text-sm text-blue-800 font-medium">
+                      A aguardar verificação do email...
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setWaitingVerification(false);
+                    setCurrentUser(null);
+                    if (verificationInterval.current) {
+                      clearInterval(verificationInterval.current);
+                    }
+                  }}
+                  className="w-full text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors py-2"
+                >
+                  Cancelar e voltar
+                </button>
+              </div>
+            ) : (
+              // Formulário de registro normal
+              <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Nome Completo
@@ -234,15 +332,18 @@ const Register = () => {
                 {loading ? 'Criando conta...' : 'Criar Conta'}
               </button>
             </form>
+            )}
 
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600">
-                Já tens conta?{' '}
-                <Link to="/login" className="text-gray-900 font-bold hover:underline">
-                  Entrar aqui
-                </Link>
-              </p>
-            </div>
+            {!waitingVerification && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-center text-sm text-gray-600">
+                  Já tens conta?{' '}
+                  <Link to="/login" className="text-gray-900 font-bold hover:underline">
+                    Entrar aqui
+                  </Link>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

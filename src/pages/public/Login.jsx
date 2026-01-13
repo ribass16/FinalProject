@@ -1,4 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useForm } from '../../hooks/useForm'; 
 import { validateLogin } from '../../utils/validators';
@@ -7,12 +8,57 @@ import { getUserProfile } from '../../services/userService';
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [waitingVerification, setWaitingVerification] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const verificationInterval = useRef(null);
   
   // Formulario com validacao
   const { values, errors, handleChange, handleSubmit } = useForm(
     { email: '', password: '' },
     validateLogin
   );
+
+  // Limpar intervalo ao desmontar componente
+  useEffect(() => {
+    return () => {
+      if (verificationInterval.current) {
+        clearInterval(verificationInterval.current);
+      }
+    };
+  }, []);
+
+  // Verificar email periodicamente
+  useEffect(() => {
+    if (waitingVerification && currentUser) {
+      verificationInterval.current = setInterval(async () => {
+        try {
+          await currentUser.reload();
+          
+          if (currentUser.emailVerified) {
+            clearInterval(verificationInterval.current);
+            setWaitingVerification(false);
+            
+            // Busca perfil para verificar role
+            const profileResult = await getUserProfile(currentUser.uid);
+            
+            if (profileResult.success && profileResult.data.role === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/');
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao verificar email:', error);
+        }
+      }, 3000); // Verificar a cada 3 segundos
+    }
+
+    return () => {
+      if (verificationInterval.current) {
+        clearInterval(verificationInterval.current);
+      }
+    };
+  }, [waitingVerification, currentUser, navigate]);
 
   const onSubmit = async () => {
     try {
@@ -21,7 +67,17 @@ const Login = () => {
       // Busca perfil para verificar role
       const profileResult = await getUserProfile(userCredential.user.uid);
       
-      if (profileResult.success && profileResult.data.role === 'admin') {
+      // Admin não precisa verificar email
+      const isAdmin = profileResult.success && profileResult.data.role === 'admin';
+      
+      // Verificar se o email foi confirmado (exceto para admin)
+      if (!userCredential.user.emailVerified && !isAdmin) {
+        setCurrentUser(userCredential.user);
+        setWaitingVerification(true);
+        return;
+      }
+      
+      if (isAdmin) {
         navigate('/admin');
       } else {
         navigate('/');
@@ -51,7 +107,51 @@ const Login = () => {
 
           {/* Formulário */}
           <div className="px-8 py-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {waitingVerification ? (
+              // Mensagem de verificação de email
+              <div className="space-y-5">
+                <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl px-6 py-5">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <div>
+                      <h3 className="font-bold text-yellow-900 text-lg mb-2">Verifique o seu email</h3>
+                      <p className="text-yellow-800 text-sm mb-3">
+                        Foi enviado um email de verificação para <strong>{currentUser?.email}</strong>
+                      </p>
+                      <p className="text-yellow-700 text-sm">
+                        Por favor, verifica o teu email e clica no link de confirmação. O sistema irá detectar automaticamente quando confirmares.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></div>
+                    <p className="text-sm text-blue-800 font-medium">
+                      A aguardar verificação...
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setWaitingVerification(false);
+                    setCurrentUser(null);
+                    if (verificationInterval.current) {
+                      clearInterval(verificationInterval.current);
+                    }
+                  }}
+                  className="w-full text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+                >
+                  Cancelar e voltar ao login
+                </button>
+              </div>
+            ) : (
+              // Formulário de login normal
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email
@@ -94,6 +194,7 @@ const Login = () => {
                 Entrar
               </button>
             </form>
+            )}
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">

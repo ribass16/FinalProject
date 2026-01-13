@@ -85,7 +85,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <Layout>
                 <Dashboard />
               </Layout>
@@ -95,7 +95,7 @@ function App() {
         <Route
           path="/admin/cars"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <Layout>
                 <CarsManagement />
               </Layout>
@@ -105,7 +105,7 @@ function App() {
         <Route
           path="/admin/add-car"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <Layout>
                 <CarForm />
               </Layout>
@@ -115,7 +115,7 @@ function App() {
         <Route
           path="/admin/edit-car/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <Layout>
                 <CarForm />
               </Layout>
@@ -125,7 +125,7 @@ function App() {
         <Route
           path="/admin/agendamentos"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <Layout>
                 <Agendamentos />
               </Layout>

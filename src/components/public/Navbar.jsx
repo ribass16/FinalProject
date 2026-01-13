@@ -90,7 +90,8 @@ const Navbar = () => {
                     onClick={() => navigate('/admin')}
                     className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
                   >
-                    <span>Admin</span>
+                    <span>🔐</span>
+                    <span>Área Admin</span>
                   </button>
                 )}
                 <div className="relative">

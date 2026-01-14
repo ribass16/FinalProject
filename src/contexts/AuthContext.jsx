@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
 import { getUserProfile } from '../services/userService';
 import { app } from '../services/firebaseClient';
 
@@ -35,12 +35,6 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    // Fazer logout após criar conta para que o link não faça auto-login
-    await signOut(auth);
-    await sendEmailVerification(userCredential.user, {
-      url: `${window.location.origin}/email-verified`,
-      handleCodeInApp: false
-    });
     return userCredential;
   };
 

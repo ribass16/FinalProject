@@ -3,6 +3,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { updateUserProfile } from "../../services/userService";
 import { getUserAgendamentos, updateAgendamentoStatus } from "../../services/agendamentoService";
 import { useNavigate } from "react-router-dom";
+import ReviewModal from "../../components/ReviewModal";
+import { hasUserReviewed } from "../../services/reviewService";
 
 const Profile = () => {
   const { user, userProfile, refreshProfile } = useAuth();
@@ -11,6 +13,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [agendamentos, setAgendamentos] = useState([]);
   const [loadingAgendamentos, setLoadingAgendamentos] = useState(true);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedAgendamento, setSelectedAgendamento] = useState(null);
+  const [reviewedAgendamentos, setReviewedAgendamentos] = useState([]);
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
@@ -35,6 +40,15 @@ const Profile = () => {
           // Filtrar apenas agendamentos nao concluídos
           const activeAgendamentos = result.data.filter(a => a.status !== 'concluido');
           setAgendamentos(activeAgendamentos);
+          
+          // Verificar quais agendamentos já têm review
+          const reviewChecks = await Promise.all(
+            result.data.map(async (agendamento) => {
+              const reviewResult = await hasUserReviewed(user.uid, agendamento.id);
+              return reviewResult.hasReviewed ? agendamento.id : null;
+            })
+          );
+          setReviewedAgendamentos(reviewChecks.filter(id => id !== null));
         }
         setLoadingAgendamentos(false);
       }
@@ -54,10 +68,17 @@ const Profile = () => {
     if (window.confirm('Tem certeza que deseja marcar este agendamento como concluído?')) {
       const result = await updateAgendamentoStatus(agendamentoId, 'concluido');
       if (result.success) {
+        // Buscar dados do agendamento antes de remover
+        const agendamento = agendamentos.find(a => a.id === agendamentoId);
+        console.log('Agendamento encontrado:', agendamento);
+        
         // Remover agendamento da lista
         setAgendamentos(agendamentos.filter(a => a.id !== agendamentoId));
-        setMessage({ type: 'success', text: 'Agendamento marcado como concluído!' });
-        setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+        
+        // Abrir modal de review
+        setSelectedAgendamento(agendamento);
+        setShowReviewModal(true);
+        console.log('Modal aberto - showReviewModal:', true);
       } else {
         setMessage({ type: 'error', text: 'Erro ao atualizar agendamento.' });
       }
@@ -334,10 +355,10 @@ const Profile = () => {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900 mb-1">
-                          {agendamento.carName || "Carro"}
+                          {agendamento.carroNome || agendamento.carName || "Carro"}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          ID: {agendamento.id}
+                          {agendamento.data} às {agendamento.hora}
                         </p>
                       </div>
                       <span
@@ -412,6 +433,18 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Modal */}
+      {selectedAgendamento && (
+        <ReviewModal
+          isOpen={showReviewModal}
+          onClose={() => {
+            setShowReviewModal(false);
+            setSelectedAgendamento(null);
+          }}
+          agendamento={selectedAgendamento}
+        />
+      )}
     </div>
   );
 };

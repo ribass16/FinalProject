@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { subscribeAutomoveis } from "../../services/firestoreService";
 import CarCard from "../../components/public/CarCard";
+import ReviewsSection from "../../components/ReviewsSection";
 
 const Home = () => {
   const [featuredCars, setFeaturedCars] = useState([]);
@@ -266,87 +267,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Secao de Testemunhos */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-black text-gray-900 mb-4">
-              O Que Dizem os Nossos Clientes
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              A satisfação dos nossos clientes é a nossa prioridade
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Testemunho 1 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-2xl">⭐</span>
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                "Site muito fácil de usar! Vi todos os carros disponíveis, preços claros 
-                e marquei um agendamento rapidamente. Recomendo!"
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  M
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">Miguel Silva</h4>
-                  <p className="text-sm text-gray-500">Lisboa</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Testemunho 2 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-2xl">⭐</span>
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                "Adorei poder ver as fotos e detalhes de cada carro. Preços justos e 
-                o agendamento para ver ao vivo foi super rápido. Excelente!"
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  A
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">Ana Costa</h4>
-                  <p className="text-sm text-gray-500">Porto</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Testemunho 3 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-2xl">⭐</span>
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                "Plataforma incrível! Comparei vários carros, vi os preços sem surpresas 
-                e consegui agendar visita no mesmo dia. Muito satisfeito!"
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  R
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">Rui Pereira</h4>
-                  <p className="text-sm text-gray-500">Braga</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Secao de Reviews (dinâmica) */}
+      <ReviewsSection />
     </div>
   );
 };

@@ -5,7 +5,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Auth pages
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
-import EmailVerified from './pages/EmailVerified';
 
 // Admin Components
 import Layout from "./components/Layout";
@@ -81,7 +80,7 @@ function App() {
             </PublicLayout>
           } 
         />
-        <Route path="/email-verified" element={<EmailVerified />} />
+        {/* email-verified route removed - email verification disabled */}
 
         {/* Rotas admin */}
         <Route

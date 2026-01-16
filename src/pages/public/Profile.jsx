@@ -70,7 +70,6 @@ const Profile = () => {
       if (result.success) {
         // Buscar dados do agendamento antes de remover
         const agendamento = agendamentos.find(a => a.id === agendamentoId);
-        console.log('Agendamento encontrado:', agendamento);
         
         // Remover agendamento da lista
         setAgendamentos(agendamentos.filter(a => a.id !== agendamentoId));
@@ -78,7 +77,6 @@ const Profile = () => {
         // Abrir modal de review
         setSelectedAgendamento(agendamento);
         setShowReviewModal(true);
-        console.log('Modal aberto - showReviewModal:', true);
       } else {
         setMessage({ type: 'error', text: 'Erro ao atualizar agendamento.' });
       }

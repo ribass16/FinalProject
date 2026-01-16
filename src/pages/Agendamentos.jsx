@@ -9,6 +9,7 @@ const Agendamentos = () => {
   useEffect(() => {
     const unsubscribe = subscribeAgendamentos((data) => {
       setAgendamentos(data);
+      
     });
     return () => unsubscribe();
   }, []);

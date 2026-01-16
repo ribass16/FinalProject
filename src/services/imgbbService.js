@@ -65,7 +65,7 @@ export const uploadImageToImgBB = async (file) => {
  */
 export const uploadMultipleImages = async (files) => {
   try {
-    console.log(`A fazer upload de ${files.length} imagens para ImgBB...`);
+    
     
     const uploadPromises = files.map((file, index) => 
       uploadImageToImgBB(file).then(result => ({

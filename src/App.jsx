@@ -12,6 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import CarsManagement from "./pages/CarsManagement";
 import CarForm from "./pages/CarForm";
 import Agendamentos from "./pages/Agendamentos";
+import Relatorios from "./pages/Relatorios";
+import Calendario from "./pages/Calendario";
 
 // Public Components
 import PublicLayout from "./components/public/PublicLayout";
@@ -19,7 +21,6 @@ import Home from "./pages/public/Home";
 import Inventory from "./pages/public/Inventory";
 import CarDetails from "./pages/public/CarDetails";
 import Contact from "./pages/public/Contact";
-import Agendar from "./pages/public/Agendar";
 import Favoritos from "./pages/public/Favoritos";
 import Profile from "./pages/public/Profile";
 
@@ -63,14 +64,7 @@ function App() {
             </PublicLayout>
           }
         />
-        <Route
-          path="/agendar"
-          element={
-            <PublicLayout>
-              <Agendar />
-            </PublicLayout>
-          }
-        />
+        {/* route /agendar removed — using modal on car details instead */}
         <Route path="/favoritos" element={<Favoritos />} />
         <Route 
           path="/profile" 
@@ -129,6 +123,26 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Agendamentos />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/relatorios"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Relatorios />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/calendario"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Calendario />
               </Layout>
             </ProtectedRoute>
           }

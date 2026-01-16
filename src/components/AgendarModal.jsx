@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { createAgendamento, getHorariosOcupados } from '../services/agendamentoService';
+import { createAgendamento } from '../services/agendamentoService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
 import { useAuth } from '../contexts/AuthContext';
+import { db } from '../services/firebaseClient';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -36,23 +38,46 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
     }
   }, [userProfile, isOpen, setValues]);
 
-  // Buscar horários ocupados quando a data mudar
+  // Buscar horários ocupados GLOBALMENTE em tempo real (bloqueio entre todos os carros)
   useEffect(() => {
-    const fetchHorariosOcupados = async () => {
-      if (values.data && carId) {
-        const result = await getHorariosOcupados(carId, values.data);
-        if (result.success) {
-          setHorariosOcupados(result.data);
-        }
-      } else {
-        setHorariosOcupados([]);
-      }
-    };
-
-    if (isOpen) {
-      fetchHorariosOcupados();
+    if (!values.data || !isOpen) {
+      setHorariosOcupados([]);
+      return;
     }
-  }, [values.data, carId, isOpen]);
+
+    
+
+    // Ve tos agendamentos todos e filtra no cliente pela data
+    const unsubscribe = onSnapshot(collection(db, 'agendamentos'), (snapshot) => {
+      const horariosSet = new Set();
+      
+      snapshot.docs.forEach(doc => {
+        const agendamento = doc.data();
+        
+        // ve agendamentos e filtra localmente por data e status (pendente/confirmado)
+        if (
+          agendamento.data === values.data &&
+          (agendamento.status === 'pendente' || agendamento.status === 'confirmado')
+        ) {
+          const hora = (agendamento.hora || '').trim();
+          if (hora) {
+            horariosSet.add(hora);
+            
+          }
+        }
+      });
+      
+      const todosHorarios = Array.from(horariosSet);
+      
+      setHorariosOcupados(todosHorarios);
+    });
+
+    
+    return () => {
+      
+      unsubscribe();
+    };
+  }, [values.data, isOpen]);
 
   const onSubmit = async () => {
     setSubmitting(true);

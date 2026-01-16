@@ -1,6 +1,34 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import logo from "../../assets/amaralcar-logo.svg";
+import { useRef, useState as useStateLocal } from 'react';
+
+// Small helper component that attempts multiple src values until one loads
+const ImgFallback = ({ sources = [], fallback, alt = '', className = '' }) => {
+  const [srcIndex, setSrcIndex] = useStateLocal(0);
+  const tried = useRef(new Set());
+
+  const handleError = (e) => {
+    tried.current.add(sources[srcIndex]);
+    const next = sources.findIndex((s, i) => !tried.current.has(s) && i > srcIndex);
+    if (next !== -1) {
+      setSrcIndex(next);
+    } else {
+      e.currentTarget.onerror = null;
+      e.currentTarget.src = fallback;
+    }
+  };
+
+  return (
+    <img
+      src={sources[srcIndex]}
+      alt={alt}
+      onError={handleError}
+      className={className}
+    />
+  );
+};
 
 const Navbar = () => {
   const location = useLocation();
@@ -46,12 +74,12 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
-            <div>
-              <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Amaralcar
-              </h1>
-              <p className="text-xs text-gray-500">O seu stand de confiança</p>
-            </div>
+            <ImgFallback
+              sources={["/amaralcar-logo.png", "/logo.png", "/logo-2.png"]}
+              fallback={logo}
+              className="h-12 sm:h-14 w-auto object-contain"
+              alt="Amaralcar"
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

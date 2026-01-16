@@ -108,14 +108,12 @@ const CarForm = () => {
     // Se houver ficheiros para upload, fazer upload primeiro
     if (imageFiles.length > 0) {
       setUploadProgress(true);
-      console.log('A fazer upload de', imageFiles.length, 'imagens para ImgBB...');
       
       const uploadResult = await uploadMultipleImages(imageFiles);
       setUploadProgress(false);
       
       if (uploadResult.success) {
         imageUrls = uploadResult.urls;
-        console.log('Upload concluído:', imageUrls);
         
         if (uploadResult.failed > 0) {
           alert(`${uploadResult.failed} de ${uploadResult.total} imagens falharam. Continuando com as restantes.`);

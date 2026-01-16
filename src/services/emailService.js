@@ -11,11 +11,7 @@ emailjs.init(PUBLIC_KEY);
 // Envia email de agendamento confirmado
 export const sendConfirmacaoEmail = async (agendamentoData) => {
   try {
-    console.log('=== DEBUG EMAIL ===');
-    console.log('SERVICE_ID:', SERVICE_ID);
-    console.log('TEMPLATE_CONFIRMADO:', TEMPLATE_CONFIRMADO);
-    console.log('PUBLIC_KEY:', PUBLIC_KEY);
-    console.log('Dados:', agendamentoData);
+    
     
     const templateParams = {
       customer_name: agendamentoData.nome,
@@ -25,7 +21,7 @@ export const sendConfirmacaoEmail = async (agendamentoData) => {
       time: agendamentoData.hora,
     };
 
-    console.log('Template Params:', templateParams);
+    // template params prepared
 
     const response = await emailjs.send(
       SERVICE_ID,
@@ -34,7 +30,7 @@ export const sendConfirmacaoEmail = async (agendamentoData) => {
       PUBLIC_KEY
     );
 
-    console.log('Email de confirmacao enviado:', response);
+    // confirma se o email foi enviado
     return { success: true, response };
   } catch (error) {
     console.error('Erro ao enviar email de confirmacao:', error);
@@ -60,7 +56,7 @@ export const sendRecusaEmail = async (agendamentoData) => {
       PUBLIC_KEY
     );
 
-    console.log('Email de recusa enviado:', response);
+    // refusal email sent
     return { success: true, response };
   } catch (error) {
     console.error('Erro ao enviar email de recusa:', error);

@@ -14,6 +14,8 @@ const Sidebar = () => {
     { path: "/admin/cars", label: "Gestão de Carros" },
     { path: "/admin/add-car", label: "Adicionar Carro" },
     { path: "/admin/agendamentos", label: "Agendamentos", hasBadge: true },
+    { path: "/admin/relatorios", label: "Relatórios" },
+    { path: "/admin/calendario", label: "Calendário" },
   ];
 
   const isActive = (path) => location.pathname === path;

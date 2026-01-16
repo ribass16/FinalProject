@@ -83,7 +83,7 @@ const Favoritos = () => {
               <div key={carro.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                 <div className="relative">
                   <img
-                    src={carro.imageUrl || 'https://via.placeholder.com/400x300?text=Sem+Imagem'}
+                    src={carro.image || (carro.images && carro.images[0]) || 'https://via.placeholder.com/400x300?text=Sem+Imagem'}
                     alt={`${carro.brand} ${carro.model}`}
                     className="w-full h-56 object-cover"
                   />
@@ -113,7 +113,7 @@ const Favoritos = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span>🛣️</span>
-                      <span>{parseInt(carro.km).toLocaleString('pt-PT')} km</span>
+                      <span>{parseInt(carro.km || carro.mileage || 0).toLocaleString('pt-PT')} km</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span>⛽</span>
@@ -126,7 +126,7 @@ const Favoritos = () => {
                   </div>
 
                   <button
-                    onClick={() => navigate(`/car/${carro.id}`)}
+                    onClick={() => navigate(`/cars/${carro.id}`)}
                     className="w-full bg-gradient-to-r from-gray-900 to-gray-700 text-white px-6 py-3 rounded-xl font-bold hover:from-gray-800 hover:to-gray-600 transition-all"
                   >
                     Ver Detalhes

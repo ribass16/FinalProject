@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebaseClient";
-import AgendarModal from "../../components/AgendarModal";
+import AgendarModal from "../../components/ScheduleModal";
 
 const CarDetails = () => {
   const { id } = useParams();

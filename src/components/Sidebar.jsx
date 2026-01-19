@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { subscribeAgendamentos } from "../services/agendamentoService";
+import { subscribeAgendamentos } from "../services/appointmentService";
 
 const Sidebar = () => {
   const location = useLocation();

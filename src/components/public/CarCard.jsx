@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { addFavorito, removeFavorito, isFavorito } from "../../services/favoritosService";
+import { addFavorito, removeFavorito, isFavorito } from "../../services/favoritesService";
 
 const CarCard = ({ car }) => {
   const { user, userProfile } = useAuth();

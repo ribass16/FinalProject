@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { updateUserProfile } from "../../services/userService";
-import { getUserAgendamentos, updateAgendamentoStatus } from "../../services/agendamentoService";
+import { getUserAgendamentos, updateAgendamentoStatus } from "../../services/appointmentService";
 import { useNavigate } from "react-router-dom";
 import ReviewModal from "../../components/ReviewModal";
 import { hasUserReviewed } from "../../services/reviewService";

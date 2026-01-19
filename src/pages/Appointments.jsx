@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { subscribeAgendamentos, updateAgendamentoStatus, deleteAgendamento } from '../services/agendamentoService';
+import { subscribeAgendamentos, updateAgendamentoStatus, deleteAgendamento } from '../services/appointmentService';
 import { sendConfirmacaoEmail, sendRecusaEmail } from '../services/emailService';
 
 const Agendamentos = () => {
   const [agendamentos, setAgendamentos] = useState([]);
   const [filtro, setFiltro] = useState('todos');
+  const [removingIds, setRemovingIds] = useState(new Set());
 
   useEffect(() => {
     const unsubscribe = subscribeAgendamentos((data) => {
-      setAgendamentos(data);
+      // Esconde agendamentos já concluídos quando chegam do snapshot
+      setAgendamentos(data.filter((item) => item.status !== 'concluido'));
       
     });
     return () => unsubscribe();
@@ -22,6 +24,19 @@ const Agendamentos = () => {
         await sendConfirmacaoEmail(agendamento);
       } else if (novoStatus === 'cancelado') {
         await sendRecusaEmail(agendamento);
+      }
+
+      // Se marcado como concluído, anima saída e remove localmente
+      if (novoStatus === 'concluido') {
+        setRemovingIds((prev) => new Set(prev).add(id));
+        setTimeout(() => {
+          setAgendamentos((prev) => prev.filter((item) => item.id !== id));
+          setRemovingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+        }, 400);
       }
     } else {
       alert('Erro ao atualizar status');
@@ -97,7 +112,14 @@ const Agendamentos = () => {
       ) : (
         <div className="space-y-4">
           {agendamentosFiltrados.map((agendamento) => (
-            <div key={agendamento.id} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-200">
+            <div
+              key={agendamento.id}
+              className={`bg-white rounded-xl shadow-sm p-6 border border-gray-200 transition-all duration-500 ${
+                removingIds.has(agendamento.id)
+                  ? 'opacity-0 scale-[0.98] translate-y-2 pointer-events-none'
+                  : 'hover:shadow-md opacity-100'
+              }`}
+            >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { subscribeFavoritos, removeFavorito } from '../../services/favoritosService';
+import { subscribeFavoritos, removeFavorito } from '../../services/favoritesService';
 import { subscribeAutomoveis } from '../../services/firestoreService';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/public/PublicLayout';

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { subscribeAgendamentos } from '../services/agendamentoService';
+import { subscribeAgendamentos } from '../services/appointmentService';
 import { subscribeAutomoveis } from '../services/firestoreService';
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createAgendamento } from '../services/agendamentoService';
+import { createAgendamento } from '../services/appointmentService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
 import { useAuth } from '../contexts/AuthContext';

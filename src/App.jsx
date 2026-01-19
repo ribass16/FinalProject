@@ -11,9 +11,9 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import CarsManagement from "./pages/CarsManagement";
 import CarForm from "./pages/CarForm";
-import Agendamentos from "./pages/Agendamentos";
-import Relatorios from "./pages/Relatorios";
-import Calendario from "./pages/Calendario";
+import Agendamentos from "./pages/Appointments";
+import Relatorios from "./pages/Reports";
+import Calendario from "./pages/Calendar";
 
 // Public Components
 import PublicLayout from "./components/public/PublicLayout";
@@ -21,7 +21,7 @@ import Home from "./pages/public/Home";
 import Inventory from "./pages/public/Inventory";
 import CarDetails from "./pages/public/CarDetails";
 import Contact from "./pages/public/Contact";
-import Favoritos from "./pages/public/Favoritos";
+import Favoritos from "./pages/public/Favorites";
 import Profile from "./pages/public/Profile";
 
 import "./App.css";

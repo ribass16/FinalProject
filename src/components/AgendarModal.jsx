@@ -6,6 +6,179 @@ import { useAuth } from '../contexts/AuthContext';
 import { db } from '../services/firebaseClient';
 import { collection, onSnapshot } from 'firebase/firestore';
 
+// Calendário customizado
+const CustomCalendar = ({ value, onChange, minDate }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    // Dias do mes anterior
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    // Dias do mes atual
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(new Date(year, month, i));
+    }
+    return days;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDisplayDate = (dateString) => {
+    if (!dateString) return 'Selecione uma data';
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleDateClick = (date) => {
+    if (date && formatDate(date) >= formatDate(new Date(minDate))) {
+      onChange({ target: { name: 'data', value: formatDate(date) } });
+      setShowCalendar(false);
+    }
+  };
+
+  const isDateDisabled = (date) => {
+    if (!date) return true;
+    return formatDate(date) < formatDate(new Date(minDate));
+  };
+
+  const isToday = (date) => {
+    if (!date) return false;
+    const today = new Date();
+    return formatDate(date) === formatDate(today);
+  };
+
+  const isSelected = (date) => {
+    if (!date || !value) return false;
+    return formatDate(date) === value;
+  };
+
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+
+  const days = getDaysInMonth(currentMonth);
+
+  return (
+    <div className="relative">
+      <div
+        onClick={() => setShowCalendar(!showCalendar)}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-gray-900 focus-within:border-transparent cursor-pointer bg-white hover:border-gray-400 transition-colors flex items-center justify-between"
+      >
+        <span className={value ? 'text-gray-900' : 'text-gray-400'}>
+          {formatDisplayDate(value)}
+        </span>
+        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+
+      {showCalendar && (
+        <div className="absolute z-50 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-80">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <button
+              type="button"
+              onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div className="font-bold text-gray-900">
+              {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+            </div>
+            <button
+              type="button"
+              onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Dias da semana */}
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {weekDays.map((day, idx) => (
+              <div key={idx} className="text-center text-xs font-semibold text-gray-600 py-2">
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Dias do mês */}
+          <div className="grid grid-cols-7 gap-1">
+            {days.map((date, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleDateClick(date)}
+                disabled={isDateDisabled(date)}
+                className={`
+                  p-2 text-sm rounded-lg transition-all
+                  ${!date ? 'invisible' : ''}
+                  ${isDateDisabled(date) ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-blue-50 cursor-pointer'}
+                  ${isSelected(date) ? 'bg-blue-600 text-white font-bold hover:bg-blue-700' : ''}
+                  ${isToday(date) && !isSelected(date) ? 'border-2 border-blue-600 font-semibold' : ''}
+                  ${!isDateDisabled(date) && !isSelected(date) && !isToday(date) ? 'text-gray-700' : ''}
+                `}
+              >
+                {date ? date.getDate() : ''}
+              </button>
+            ))}
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={() => {
+                onChange({ target: { name: 'data', value: '' } });
+                setShowCalendar(false);
+              }}
+              className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              Limpar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const today = formatDate(new Date());
+                onChange({ target: { name: 'data', value: today } });
+                setShowCalendar(false);
+              }}
+              className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              Hoje
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -208,13 +381,10 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Data Pretendida *
               </label>
-              <input
-                type="date"
-                name="data"
+              <CustomCalendar
                 value={values.data}
                 onChange={handleChange}
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                minDate={new Date().toISOString().split('T')[0]}
               />
               {errors.data && <p className="text-red-600 text-sm mt-1">{errors.data}</p>}
             </div>

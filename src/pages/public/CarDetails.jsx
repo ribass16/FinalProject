@@ -75,7 +75,7 @@ const CarDetails = () => {
   const handleEmailContact = () => {
     const subject = `Interessado em ${car.brand} ${car.model}`;
     const body = `Olá,\n\nEstou interessado no seguinte veículo:\n\n${car.brand} ${car.model} (${car.year})\nPreço: €${car.price?.toLocaleString()}\n\nAguardo o vosso contacto.\n\nObrigado!`;
-    window.location.href = `mailto:info@carpoint.pt?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:amralcarpopup@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (

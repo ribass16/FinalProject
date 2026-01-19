@@ -89,16 +89,10 @@ const Contact = () => {
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
                   <a
-                    href="mailto:info@carpoint.pt"
+                    href="mailto:amralcarpopup@gmail.com"
                     className="text-gray-600 hover:text-blue-600 transition-colors block mb-1"
                   >
-                    info@carpoint.pt
-                  </a>
-                  <a
-                    href="mailto:vendas@carpoint.pt"
-                    className="text-gray-600 hover:text-blue-600 transition-colors block"
-                  >
-                    vendas@carpoint.pt
+                    amralcarpopup@gmail.com
                   </a>
                 </div>
               </div>

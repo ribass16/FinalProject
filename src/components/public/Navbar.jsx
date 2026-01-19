@@ -4,7 +4,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/amaralcar-logo.svg";
 import { useRef, useState as useStateLocal } from 'react';
 
-// Small helper component that attempts multiple src values until one loads
 const ImgFallback = ({ sources = [], fallback, alt = '', className = '' }) => {
   const [srcIndex, setSrcIndex] = useStateLocal(0);
   const tried = useRef(new Set());
@@ -38,6 +37,11 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
+
+  // scroll para o topo ao mudar de pag
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Verificar se e um novo utilizador e mostrar animação
   useEffect(() => {

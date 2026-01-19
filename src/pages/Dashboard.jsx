@@ -1,26 +1,35 @@
 import { useEffect, useState } from "react";
 import { subscribeAutomoveis } from "../services/firestoreService";
+import { subscribeAgendamentos } from "../services/appointmentService";
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [cars, setCars] = useState([]);
+  const [agendamentos, setAgendamentos] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = subscribeAutomoveis((allCars) => {
+    const unsubscribeCars = subscribeAutomoveis((allCars) => {
       setCars(allCars);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    const unsubscribeAgendamentos = subscribeAgendamentos((allAgendamentos) => {
+      setAgendamentos(allAgendamentos);
+    });
+
+    return () => {
+      unsubscribeCars();
+      unsubscribeAgendamentos();
+    };
   }, []);
 
   const totalCars = cars.length;
   const availableCars = cars.filter((car) => car.available).length;
-  const unavailableCars = totalCars - availableCars;
+  const pendingAgendamentos = agendamentos.filter((ag) => ag.status === "pendente").length;
   
   // Calcular valor total dos carros
   const totalInventoryValue = cars.reduce((sum, car) => sum + (car.price || 0), 0);
@@ -46,8 +55,8 @@ const Dashboard = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Bem-vindo, <span className="font-medium">{user?.displayName || user?.email}</span></p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-0"></h2>
+          <p className="text-gray-600 mt-1">Bem-vindo, <span className="font-medium text-gray-900">{user?.displayName || user?.email}</span></p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -82,12 +91,12 @@ const Dashboard = () => {
         <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Indisponíveis</p>
-              <p className="mt-2 text-3xl font-bold text-red-600">{unavailableCars}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Agendamentos Pendentes</p>
+              <p className="mt-2 text-3xl font-bold text-orange-600">{pendingAgendamentos}</p>
             </div>
-            <div className="bg-red-50 p-3 rounded-lg">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="bg-orange-50 p-3 rounded-lg">
+              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
           </div>

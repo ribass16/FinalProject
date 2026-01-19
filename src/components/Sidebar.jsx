@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { subscribeAgendamentos } from "../services/appointmentService";
+import logoSvg from "../assets/amaralcar-logo.svg";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -40,26 +41,30 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 z-50">
-      <div className="flex items-center px-6 h-16 border-b border-gray-200">
-        <h1 className="text-xl font-semibold text-gray-900">Amaralcar</h1>
+    <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 text-white z-50">
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-6 h-20 border-b border-slate-700">
+        <img src={logoSvg} alt="CarWay" className="h-8 w-8" />
+        <span className="text-xl font-bold">Amaralcar</span>
       </div>
 
-      <nav className="mt-6 px-3">
-        <ul className="space-y-1">
+      {/* Navigation */}
+      <nav className="mt-8 px-4 flex flex-col h-[calc(100vh-200px)]">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 mb-6">Navegação</p>
+        <ul className="space-y-3">
           {menuItems.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive(item.path)
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-700 hover:bg-gray-100"
+                    ? "bg-primary-600 text-white shadow-lg"
+                    : "text-slate-300 hover:bg-slate-800"
                 }`}
               >
                 <span>{item.label}</span>
                 {item.hasBadge && pendingCount > 0 && (
-                  <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse">
+                  <span className="ml-auto flex items-center justify-center min-w-[24px] h-6 px-2 bg-red-500 text-white text-xs font-bold rounded-full">
                     {pendingCount}
                   </span>
                 )}
@@ -69,31 +74,40 @@ const Sidebar = () => {
         </ul>
 
         {/* Separador */}
-        <div className="my-4 border-t border-gray-200"></div>
+        <div className="my-6 border-t border-slate-700"></div>
 
         {/* Ver site publico */}
         <Link
           to="/"
-          className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 transition-all duration-200"
         >
           Voltar ao Site
         </Link>
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 space-y-3">
-        {/* Botao de Logout */}
+      {/* Footer */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700 bg-slate-900 space-y-3">
+        {/* Admin Box */}
+        <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-2.5">
+          {/* User Info */}
+          {user?.email && (
+            <div className="text-xs space-y-0.5">
+              <p className="text-slate-400 uppercase tracking-wider font-semibold text-[10px]">Admin</p>
+              <p className="text-slate-200 font-medium truncate text-xs">{user.email}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+          className="w-full px-4 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-all duration-200"
         >
           Sair
         </button>
-        
-        {user?.email && (
-          <p className="text-xs text-gray-500 text-center truncate">{user.email}</p>
-        )}
-        
-        <p className="text-xs text-gray-500 text-center">Amaralcar © 2025</p>
+
+        {/* Copyright */}
+        <p className="text-xs text-slate-500 text-center">Amaralcar © 2025</p>
       </div>
     </aside>
   );

@@ -5,13 +5,11 @@ import { sendConfirmacaoEmail, sendRecusaEmail } from '../services/emailService'
 const Agendamentos = () => {
   const [agendamentos, setAgendamentos] = useState([]);
   const [filtro, setFiltro] = useState('todos');
-  const [removingIds, setRemovingIds] = useState(new Set());
 
   useEffect(() => {
     const unsubscribe = subscribeAgendamentos((data) => {
-      // Esconde agendamentos já concluídos quando chegam do snapshot
-      setAgendamentos(data.filter((item) => item.status !== 'concluido'));
-      
+      // Mantém concluídos no snapshot para permitir animar saída local
+      setAgendamentos(data);
     });
     return () => unsubscribe();
   }, []);
@@ -26,18 +24,7 @@ const Agendamentos = () => {
         await sendRecusaEmail(agendamento);
       }
 
-      // Se marcado como concluído, anima saída e remove localmente
-      if (novoStatus === 'concluido') {
-        setRemovingIds((prev) => new Set(prev).add(id));
-        setTimeout(() => {
-          setAgendamentos((prev) => prev.filter((item) => item.id !== id));
-          setRemovingIds((prev) => {
-            const next = new Set(prev);
-            next.delete(id);
-            return next;
-          });
-        }, 400);
-      }
+      // Concluídos somem imediatamente via filtro
     } else {
       alert('Erro ao atualizar status');
     }
@@ -52,7 +39,10 @@ const Agendamentos = () => {
     }
   };
 
-  const agendamentosFiltrados = agendamentos.filter(ag => {
+  const agendamentosFiltrados = agendamentos.filter((ag) => {
+    // Oculta concluídos do fluxo normal
+    if (ag.status === 'concluido') return false;
+
     if (filtro === 'todos') return true;
     return ag.status === filtro;
   });
@@ -83,7 +73,7 @@ const Agendamentos = () => {
               filtro === 'todos' ? 'bg-gray-900 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Todos ({agendamentos.length})
+            Todos ({agendamentos.filter(a => a.status !== 'concluido').length})
           </button>
           <button
             onClick={() => setFiltro('pendente')}
@@ -114,11 +104,7 @@ const Agendamentos = () => {
           {agendamentosFiltrados.map((agendamento) => (
             <div
               key={agendamento.id}
-              className={`bg-white rounded-xl shadow-sm p-6 border border-gray-200 transition-all duration-500 ${
-                removingIds.has(agendamento.id)
-                  ? 'opacity-0 scale-[0.98] translate-y-2 pointer-events-none'
-                  : 'hover:shadow-md opacity-100'
-              }`}
+              className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 transition hover:shadow-md"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">

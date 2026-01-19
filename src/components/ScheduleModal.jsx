@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createAgendamento } from '../services/appointmentService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
@@ -10,6 +10,8 @@ import { collection, onSnapshot } from 'firebase/firestore';
 const CustomCalendar = ({ value, onChange, minDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showOpenNotice, setShowOpenNotice] = useState(false);
+  const openNoticeTimer = useRef(null);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -46,15 +48,35 @@ const CustomCalendar = ({ value, onChange, minDate }) => {
   };
 
   const handleDateClick = (date) => {
-    if (date && formatDate(date) >= formatDate(new Date(minDate))) {
+    if (!date) return;
+    if (isDateDisabled(date)) return;
+    if (formatDate(date) >= formatDate(new Date(minDate))) {
       onChange({ target: { name: 'data', value: formatDate(date) } });
       setShowCalendar(false);
+      if (openNoticeTimer.current) { clearTimeout(openNoticeTimer.current); openNoticeTimer.current = null; }
+      setShowOpenNotice(false);
     }
   };
 
   const isDateDisabled = (date) => {
     if (!date) return true;
-    return formatDate(date) < formatDate(new Date(minDate));
+    if (formatDate(date) < formatDate(new Date(minDate))) return true;
+    const day = date.getDay();
+    if (day === 0 || day === 6) return true;
+    return false;
+  };
+
+  const toggleCalendar = () => {
+    const willOpen = !showCalendar;
+    setShowCalendar(willOpen);
+    if (willOpen) {
+      setShowOpenNotice(true);
+      if (openNoticeTimer.current) clearTimeout(openNoticeTimer.current);
+      openNoticeTimer.current = setTimeout(() => setShowOpenNotice(false), 4000);
+    } else {
+      if (openNoticeTimer.current) { clearTimeout(openNoticeTimer.current); openNoticeTimer.current = null; }
+      setShowOpenNotice(false);
+    }
   };
 
   const isToday = (date) => {
@@ -77,10 +99,12 @@ const CustomCalendar = ({ value, onChange, minDate }) => {
 
   const days = getDaysInMonth(currentMonth);
 
+  useEffect(() => { return () => { if (openNoticeTimer.current) clearTimeout(openNoticeTimer.current); }; }, []);
+
   return (
     <div className="relative">
       <div
-        onClick={() => setShowCalendar(!showCalendar)}
+        onClick={toggleCalendar}
         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-gray-900 focus-within:border-transparent cursor-pointer bg-white hover:border-gray-400 transition-colors flex items-center justify-between"
       >
         <span className={value ? 'text-gray-900' : 'text-gray-400'}>
@@ -93,6 +117,14 @@ const CustomCalendar = ({ value, onChange, minDate }) => {
 
       {showCalendar && (
         <div className="absolute z-50 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-80">
+          {showOpenNotice && (
+            <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5">⚠️</span>
+                <div>O stand está fechado aos fins de semana — sábados e domingos indisponíveis.</div>
+              </div>
+            </div>
+          )}
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <button

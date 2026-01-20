@@ -290,16 +290,16 @@ const CarDetails = () => {
                 </button>
               </div>
             </div>
-
-            {/* Descrição */}
-            {car.description && (
-              <div className="bg-white rounded-2xl shadow-xl p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Descrição</h2>
-                <p className="text-gray-700 leading-relaxed">{car.description}</p>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* Descrição - Horizontal */}
+        {car.description && (
+          <div className="bg-white rounded-2xl shadow-xl p-8 mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Descrição</h2>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{car.description}</p>
+          </div>
+        )}
       </div>
 
       {/* Modal de Agendamento */}

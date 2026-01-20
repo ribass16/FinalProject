@@ -78,17 +78,15 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fadeIn px-4" style={{ animationDelay: "0.4s" }}>
               <button
                 onClick={() => navigate("/cars")}
-                className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-2xl flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-2xl text-center w-full sm:w-auto"
               >
-                <span></span>
-                <span className="whitespace-nowrap">Ver Todos os Carros</span>
+                Ver Todos os Carros
               </button>
               <button
                 onClick={() => navigate("/contact")}
-                className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 hover:scale-105 text-center w-full sm:w-auto"
               >
-                <span></span>
-                <span>Contactar</span>
+                Contactar
               </button>
             </div>
           </div>

@@ -51,12 +51,7 @@ const Contact = () => {
                   >
                     +351 912 345 678
                   </a>
-                  <a
-                    href="tel:+351213456789"
-                    className="text-gray-600 hover:text-blue-600 transition-colors block"
-                  >
-                    +351 21 345 6789
-                  </a>
+                  {/* removed secondary phone number as requested */}
                 </div>
               </div>
             </div>

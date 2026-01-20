@@ -80,14 +80,14 @@ const Home = () => {
                 onClick={() => navigate("/cars")}
                 className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-2xl flex items-center justify-center gap-2 w-full sm:w-auto"
               >
-                <span>🚗</span>
+                <span></span>
                 <span className="whitespace-nowrap">Ver Todos os Carros</span>
               </button>
               <button
                 onClick={() => navigate("/contact")}
                 className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto"
               >
-                <span>📞</span>
+                <span></span>
                 <span>Contactar</span>
               </button>
             </div>
@@ -104,7 +104,7 @@ const Home = () => {
 
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto justify-items-center">
             <div className="text-center">
               <div className="text-5xl font-black text-gray-900 mb-2">{totalAvailableCars}</div>
               <p className="text-gray-600 font-semibold">Carros Disponíveis</p>
@@ -112,10 +112,6 @@ const Home = () => {
             <div className="text-center">
               <div className="text-5xl font-black text-gray-900 mb-2">100%</div>
               <p className="text-gray-600 font-semibold">Satisfação Garantida</p>
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-black text-gray-900 mb-2">24/7</div>
-              <p className="text-gray-600 font-semibold">Suporte ao Cliente</p>
             </div>
           </div>
         </div>

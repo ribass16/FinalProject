@@ -1,7 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
-import { createUserProfile } from '../../services/userService'; 
+import { createUserProfile } from '../../services/userService';
+import { sendEmailVerification } from 'firebase/auth';
 
 const Register = () => {
   const { register } = useAuth();
@@ -75,17 +76,24 @@ const Register = () => {
       const result = await createUserProfile(userCredential.user.uid, profileData);
       
       if (result.success) {
-        // Marcar como novo utilizador para mostrar animação no perfil
-        localStorage.setItem(`newUser_${userCredential.user.uid}`, 'true');
-        
-        // Redirecionar baseado no role
-        if (isAdmin) {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+          // Enviar email de verificação apontando para o ambiente atual (localhost ou deploy)
+          const currentUrl = window.location.origin;
+          const actionCodeSettings = {
+            // Aponta para o handler do Firebase no mesmo domínio (dev ou prod)
+            url: `${currentUrl}/__/auth/action`,
+            handleCodeInApp: true,
+          };
+
+          try {
+            await sendEmailVerification(userCredential.user, actionCodeSettings);
+          } catch (emailError) {
+            console.error('❌ Erro ao enviar email:', emailError);
+          }
+
+          // Redirecionar para página de verificação
+          navigate('/verify-email');
       } else {
-        alert('Conta criada mas erro ao salvar perfil: ' + result.error);
+        alert('Erro ao criar conta: ' + result.error);
       }
     } catch (err) {
       alert(err.message || 'Erro ao registar');

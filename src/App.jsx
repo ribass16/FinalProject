@@ -5,6 +5,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Auth pages
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
+import VerifyEmail from './pages/public/VerifyEmail';
+import EmailAction from './pages/public/EmailAction';
 
 // Admin Components
 import Layout from "./components/Layout";
@@ -151,6 +153,8 @@ function App() {
         {/* Auth routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/__/auth/action" element={<EmailAction />} />
       </Routes>
       </AuthProvider>
     </Router>

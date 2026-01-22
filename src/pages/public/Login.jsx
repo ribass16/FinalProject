@@ -1,5 +1,5 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useForm } from '../../hooks/useForm'; 
 import { validateLogin } from '../../utils/validators';
@@ -8,10 +8,21 @@ import { getUserProfile } from '../../services/userService';
 const Login = () => {
   const { login, resetPassword } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [verifiedMessage, setVerifiedMessage] = useState('');
+
+  // Verificar se vem da verificação de email
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('verified') === 'true') {
+      setVerifiedMessage('✅ Email verificado com sucesso! Podes fazer login agora.');
+      setTimeout(() => setVerifiedMessage(''), 5000);
+    }
+  }, [location]);
   
   const { values, errors, handleChange, handleSubmit } = useForm(
     { email: '', password: '' },
@@ -76,6 +87,15 @@ const Login = () => {
 
           <div className="px-8 py-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              {/* Mensagem de email verificado */}
+              {verifiedMessage && (
+                <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 animate-pulse">
+                  <p className="text-green-800 text-sm font-semibold text-center">
+                    {verifiedMessage}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email

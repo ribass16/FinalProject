@@ -130,7 +130,7 @@ const CarCard = ({ car }) => {
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div>
             <p className="text-sm text-gray-500">Preço</p>
-            <p className="text-3xl font-black bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+            <p className="text-3xl font-black text-gray-900">
               €{car.price?.toLocaleString()}
             </p>
           </div>

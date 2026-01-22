@@ -197,7 +197,7 @@ const CarDetails = () => {
               </h1>
               
               <div className="flex items-end gap-2 mb-6">
-                <span className="text-6xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-6xl font-black text-gray-900">
                   €{car.price?.toLocaleString()}
                 </span>
               </div>

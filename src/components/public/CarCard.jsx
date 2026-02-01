@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { addFavorito, removeFavorito, isFavorito } from "../../services/favoritesService";
+import { Calendar, Fuel } from "lucide-react";
+import RoadIcon from "../icons/RoadIcon";
 
 const CarCard = ({ car }) => {
   const { user, userProfile } = useAuth();
@@ -109,20 +111,20 @@ const CarCard = ({ car }) => {
         </h3>
 
         <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-          <span className="flex items-center gap-1">
-            <span>📅</span>
-            <span>{car.year}</span>
+          <span className="flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-gray-700" />
+            <span className="text-gray-900">{car.year}</span>
           </span>
           {car.mileage && (
-            <span className="flex items-center gap-1">
-              <span>🛣️</span>
-              <span>{car.mileage?.toLocaleString()} km</span>
+            <span className="flex items-center gap-3">
+              <RoadIcon className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-900">{car.mileage?.toLocaleString()} km</span>
             </span>
           )}
           {car.fuel && (
-            <span className="flex items-center gap-1">
-              <span>⛽</span>
-              <span>{car.fuel}</span>
+            <span className="flex items-center gap-3">
+              <Fuel className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-900">{car.fuel}</span>
             </span>
           )}
         </div>

@@ -19,7 +19,7 @@ const Login = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('verified') === 'true') {
-      setVerifiedMessage('✅ Email verificado com sucesso! Podes fazer login agora.');
+      setVerifiedMessage('✓ Email verificado com sucesso! Podes fazer login agora.');
       setTimeout(() => setVerifiedMessage(''), 5000);
     }
   }, [location]);
@@ -58,14 +58,14 @@ const Login = () => {
 
     try {
       await resetPassword(resetEmail);
-      setResetMessage('✅ Email enviado! Verifica a tua caixa de entrada (e spam).');
+      setResetMessage('✓ Email enviado! Verifica a tua caixa de entrada (e spam).');
       setTimeout(() => {
         setShowResetPassword(false);
         setResetMessage('');
         setResetEmail('');
       }, 3000);
     } catch (error) {
-      setResetMessage('❌ Erro ao enviar email. Verifica se o email está correto.');
+      setResetMessage('✗ Erro ao enviar email. Verifica se o email está correto.');
     }
   };
 

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ActionHandler from './components/ActionHandler';
 
 // Auth pages
 import Login from './pages/public/Login';
@@ -32,7 +33,8 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-      <Routes>
+        <ActionHandler>
+          <Routes>
         {/* Rotas Públicas */}
         <Route
           path="/"
@@ -155,7 +157,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/__/auth/action" element={<EmailAction />} />
-      </Routes>
+        </Routes>
+        </ActionHandler>
       </AuthProvider>
     </Router>
   );

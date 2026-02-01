@@ -131,7 +131,7 @@ const VerifyEmail = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Email Verificado! ✅</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Email Verificado! <span className="text-green-600">✓</span></h2>
             <p className="text-gray-700 mb-4">A tua conta está pronta para usar.</p>
             <p className="text-sm text-gray-500">Redirecionando...</p>
           </div>
@@ -158,7 +158,7 @@ const VerifyEmail = () => {
               {user?.email && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <p className="text-sm text-blue-900">
-                    📧 Enviámos um email de verificação para:
+                    Enviámos um email de verificação para:
                     <br />
                     <strong className="text-blue-700">{user.email}</strong>
                   </p>
@@ -178,7 +178,7 @@ const VerifyEmail = () => {
                   </svg>
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">
-                  ⏳ Aguardando verificação...
+                  Aguardando verificação...
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
                   Clica no link que enviámos para o teu email
@@ -191,7 +191,7 @@ const VerifyEmail = () => {
               <div className="space-y-3">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <p className="text-xs text-green-800 text-center">
-                    ✅ <strong>Assim que clicares no link</strong>, um popup aparecerá automaticamente e serás redirecionado!
+                    <strong>✓ Assim que clicares no link</strong>, um popup aparecerá automaticamente e serás redirecionado!
                   </p>
                 </div>
 

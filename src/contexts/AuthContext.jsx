@@ -57,7 +57,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const resetPassword = (email) => {
-    return sendPasswordResetEmail(auth, email);
+    const actionCodeSettings = {
+      url: `${window.location.origin}/__/auth/action`,
+      handleCodeInApp: false,
+    };
+    return sendPasswordResetEmail(auth, email, actionCodeSettings);
   };
 
   const value = { user, userProfile, loading, register, login, logout, refreshProfile, resetPassword };

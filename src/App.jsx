@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ActionHandler from './components/ActionHandler';
+import ChatBot from './components/ChatBot';
 
 // Auth pages
 import Login from './pages/public/Login';
@@ -159,6 +160,7 @@ function App() {
         <Route path="/__/auth/action" element={<EmailAction />} />
         </Routes>
         </ActionHandler>
+        <ChatBot />
       </AuthProvider>
     </Router>
   );

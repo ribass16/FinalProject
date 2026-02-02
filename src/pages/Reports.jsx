@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { subscribeAgendamentos } from '../services/appointmentService';
 import jsPDF from 'jspdf';
-import logoUrl from '../assets/amaralcar-logo.svg';
+import logoUrl from '../assets/logo.png';
 
 const formatDate = (iso) => iso || '';
 

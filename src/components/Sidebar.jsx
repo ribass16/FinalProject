@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { subscribeAgendamentos } from "../services/appointmentService";
-import logoSvg from "../assets/amaralcar-logo.svg";
+import logoSvg from "../assets/logo.png";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -43,9 +43,9 @@ const Sidebar = () => {
   return (
     <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 text-white z-50">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 h-20 border-b border-slate-700">
-        <img src={logoSvg} alt="CarWay" className="h-8 w-8" />
-        <span className="text-xl font-bold">Amaralcar</span>
+      <div className="flex items-center gap-3 px-6 h-24 border-b border-slate-700">
+        <img src={logoSvg} alt="Amaralcar" className="h-16 w-auto" />
+        <span className="text-3xl font-bold">Amaralcar</span>
       </div>
 
       {/* Navigation */}

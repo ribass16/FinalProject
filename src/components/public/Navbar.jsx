@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import logo from "../../assets/amaralcar-logo.svg";
+import logo from "../../assets/logo.png";
 import { useRef, useState as useStateLocal } from 'react';
 
 const ImgFallback = ({ sources = [], fallback, alt = '', className = '' }) => {
@@ -79,9 +79,9 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
             <ImgFallback
-              sources={["/amaralcar-logo.png", "/logo.png", "/logo-2.png"]}
+              sources={["/logo.png", "/amaralcar.png", "/amaralcar-logo.png"]}
               fallback={logo}
-              className="h-12 sm:h-14 w-auto object-contain"
+              className="h-16 sm:h-18 w-auto object-contain"
               alt="Amaralcar"
             />
           </Link>

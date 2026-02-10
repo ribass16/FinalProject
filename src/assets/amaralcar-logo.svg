@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" preserveAspectRatio="xMinYMid">
   <g>
     <text x="0" y="34" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#D32F2F">Amaral</text>
-    <text x="110" y="34" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#0f172a">CAR</text>
-    <text x="0" y="56" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#6b7280">Comércio de Automóveis</text>
+    <text x="110" y="34" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#e2e8f0">CAR</text>
+    <text x="0" y="56" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#94a3b8">Comércio de Automóveis</text>
   </g>
   <g transform="translate(240,6) scale(0.6)">
-    <path d="M48 18c6-6 18-10 32-10s26 4 32 10c4 4 6 8 6 12s-2 8-6 12c-6 6-18 10-32 10s-26-4-32-10c-4-4-6-8-6-12s2-8 6-12z" fill="none" stroke="#111" stroke-width="2"/>
-    <circle cx="36" cy="36" r="4" fill="#111"/>
-    <circle cx="92" cy="36" r="4" fill="#111"/>
+    <path d="M48 18c6-6 18-10 32-10s26 4 32 10c4 4 6 8 6 12s-2 8-6 12c-6 6-18 10-32 10s-26-4-32-10c-4-4-6-8-6-12s2-8 6-12z" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+    <circle cx="36" cy="36" r="4" fill="#e2e8f0"/>
+    <circle cx="92" cy="36" r="4" fill="#e2e8f0"/>
   </g>
 </svg>

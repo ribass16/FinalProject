@@ -21,8 +21,17 @@ const CarForm = () => {
     images: [],
     description: "",
     mileage: "",
+    engineCapacity: "",
+    seats: "",
+    bodyType: "",
     fuel: "Gasolina",
+    power: "",
+    doors: "",
+    vin: "",
+    monthYear: "",
     transmission: "Manual",
+    color: "",
+    origin: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -43,8 +52,17 @@ const CarForm = () => {
         images: carToEdit.images || [],
         description: carToEdit.description || "",
         mileage: carToEdit.mileage || "",
+        engineCapacity: carToEdit.engineCapacity || "",
+        seats: carToEdit.seats || "",
+        bodyType: carToEdit.bodyType || "",
         fuel: carToEdit.fuel || "Gasolina",
+        power: carToEdit.power || "",
+        doors: carToEdit.doors || "",
+        vin: carToEdit.vin || "",
+        monthYear: carToEdit.monthYear || "",
         transmission: carToEdit.transmission || "Manual",
+        color: carToEdit.color || "",
+        origin: carToEdit.origin || "",
       });
       
       // Carregar previews das imagens existentes
@@ -128,11 +146,22 @@ const CarForm = () => {
     // Compatibilidade: usar primeira imagem como 'image' principal
     const mainImage = imageUrls[0] || formData.image || "";
 
+    const parseIntOrNull = (value) => {
+      if (value === "" || value === null || value === undefined) return null;
+      const parsed = parseInt(value, 10);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+
     const carData = {
       ...formData,
       price: parseFloat(formData.price),
-      year: parseInt(formData.year),
-      mileage: formData.mileage ? parseInt(formData.mileage) : 0,
+      year: parseInt(formData.year, 10),
+      mileage: parseIntOrNull(formData.mileage),
+      engineCapacity: parseIntOrNull(formData.engineCapacity),
+      seats: parseIntOrNull(formData.seats),
+      power: parseIntOrNull(formData.power),
+      doors: parseIntOrNull(formData.doors),
+      bodyType: formData.bodyType || formData.category,
       image: mainImage,
       images: imageUrls,
     };
@@ -239,7 +268,7 @@ const CarForm = () => {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Categoria
+                Tipo
               </label>
               <select
                 name="category"
@@ -249,10 +278,9 @@ const CarForm = () => {
               >
                 <option value="Sedan">Sedan</option>
                 <option value="SUV">SUV</option>
-                <option value="Station">Station</option>
                 <option value="Hatchback">Hatchback</option>
                 <option value="Coupe">Coupe</option>
-                <option value="Desportivo">Desportivo</option>
+                <option value="Station">Station</option>
               </select>
             </div>
 
@@ -301,6 +329,123 @@ const CarForm = () => {
                 <option value="Manual">Manual</option>
                 <option value="Automática">Automática</option>
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Cilindrada (cc)
+              </label>
+              <input
+                type="number"
+                name="engineCapacity"
+                value={formData.engineCapacity}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: 1968"
+                min="0"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Potência (cv)
+              </label>
+              <input
+                type="number"
+                name="power"
+                value={formData.power}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: 122"
+                min="0"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Lugares
+              </label>
+              <input
+                type="number"
+                name="seats"
+                value={formData.seats}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: 5"
+                min="1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Portas
+              </label>
+              <input
+                type="number"
+                name="doors"
+                value={formData.doors}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: 5"
+                min="1"
+              />
+            </div>
+
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                VIN
+              </label>
+              <input
+                type="text"
+                name="vin"
+                value={formData.vin}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: WBA3B5C50EP123456"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Mês/Ano
+              </label>
+              <input
+                type="text"
+                name="monthYear"
+                value={formData.monthYear}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: Out / 2021"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Cor
+              </label>
+              <input
+                type="text"
+                name="color"
+                value={formData.color}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: Branco"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Origem
+              </label>
+              <input
+                type="text"
+                name="origin"
+                value={formData.origin}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                placeholder="Ex: Nacional"
+              />
             </div>
           </div>
 

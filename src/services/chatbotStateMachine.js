@@ -147,6 +147,7 @@ export class ChatbotStateMachine {
           { key: 'sedan', label: '🚗 Sedan' },
           { key: 'suv', label: '🚙 SUV' },
           { key: 'hatchback', label: '🚗 Hatchback' },
+          { key: 'coupe', label: '🏎️ Coupe' },
           { key: 'station', label: '🚘 Station' }
         ];
         nextState = STATES.CAR_TYPE;
@@ -189,7 +190,7 @@ export class ChatbotStateMachine {
         ];
         nextState = STATES.MAIN_MENU;
       } else {
-        const carTypes = { sedan: 'Sedan', suv: 'SUV', hatchback: 'Hatchback', station: 'Station' };
+        const carTypes = { sedan: 'Sedan', suv: 'SUV', hatchback: 'Hatchback', coupe: 'Coupe', station: 'Station' };
         this.lead.carType = carTypes[inputKey];
         message = `Perfeito! Procura um ${this.lead.carType}.\n\nQual é o seu orçamento?`;
         options = [

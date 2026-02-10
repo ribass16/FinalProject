@@ -3,9 +3,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebaseClient";
 import AgendarModal from "../../components/ScheduleModal";
-import { Calendar, Fuel } from "lucide-react";
+import {
+  Calendar,
+  Fuel,
+  Gauge,
+  Wrench,
+  Users,
+  Car,
+  Zap,
+  DoorOpen,
+  Barcode,
+  Settings,
+  Palette,
+  Flag,
+} from "lucide-react";
 import RoadIcon from "../../components/icons/RoadIcon";
-import ManualGearIcon from "../../components/icons/ManualGearIcon";
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -80,6 +92,32 @@ const CarDetails = () => {
     const body = `Olá,\n\nEstou interessado no seguinte veículo:\n\n${car.brand} ${car.model} (${car.year})\nPreço: €${car.price?.toLocaleString()}\n\nAguardo o vosso contacto.\n\nObrigado!`;
     window.location.href = `mailto:amralcarpopup@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
+
+  const formatText = (value) => {
+    if (value === null || value === undefined || value === "") return "—";
+    return value;
+  };
+
+  const formatNumberWithSuffix = (value, suffix) => {
+    if (value === null || value === undefined || value === "") return "—";
+    const formatted = typeof value === "number" ? value.toLocaleString() : value;
+    return suffix ? `${formatted} ${suffix}` : String(formatted);
+  };
+
+  const characteristics = [
+    { label: "Quilometros", value: formatNumberWithSuffix(car.mileage, "Kms"), icon: <RoadIcon className="w-5 h-5 text-gray-900" /> },
+    { label: "Cilindrada", value: formatNumberWithSuffix(car.engineCapacity, "cc"), icon: <Wrench className="w-5 h-5 text-gray-900" /> },
+    { label: "Lugares", value: formatNumberWithSuffix(car.seats, "Lugares"), icon: <Users className="w-5 h-5 text-gray-900" /> },
+    { label: "Tipo", value: formatText(car.bodyType || car.category), icon: <Car className="w-5 h-5 text-gray-900" /> },
+    { label: "Combustível", value: formatText(car.fuel), icon: <Fuel className="w-5 h-5 text-gray-900" /> },
+    { label: "Potência", value: formatNumberWithSuffix(car.power, "cv"), icon: <Zap className="w-5 h-5 text-gray-900" /> },
+    { label: "Portas", value: formatNumberWithSuffix(car.doors, ""), icon: <DoorOpen className="w-5 h-5 text-gray-900" /> },
+    { label: "VIN", value: formatText(car.vin), icon: <Barcode className="w-5 h-5 text-gray-900" /> },
+    { label: "Mês/Ano", value: formatText(car.monthYear || car.year), icon: <Calendar className="w-5 h-5 text-gray-900" /> },
+    { label: "Transmissão", value: formatText(car.transmission), icon: <Settings className="w-5 h-5 text-gray-900" /> },
+    { label: "Cor", value: formatText(car.color), icon: <Palette className="w-5 h-5 text-gray-900" /> },
+    { label: "Origem", value: formatText(car.origin), icon: <Flag className="w-5 h-5 text-gray-900" /> },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -205,42 +243,20 @@ const CarDetails = () => {
                 </span>
               </div>
 
-              {/* Especificações */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-sm text-gray-600 mb-1">Ano</p>
-                  <p className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                    <Calendar className="w-6 h-6 text-gray-900" />
-                    <span className="font-extrabold">{car.year}</span>
-                  </p>
+              {/* Caracteristicas */}
+              <div className="border-t border-gray-200 mt-6 pt-6 mb-8">
+                <h2 className="text-base font-bold text-gray-900 mb-5">Características</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6">
+                  {characteristics.map((item) => (
+                    <div key={item.label} className="flex items-center gap-3">
+                      <div className="text-gray-700">{item.icon}</div>
+                      <div className="leading-tight">
+                        <p className="text-xs text-gray-500">{item.label}</p>
+                        <p className="text-sm font-semibold text-gray-900">{item.value}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                {car.mileage && (
-                  <div className="bg-gray-50 p-4 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Quilometragem</p>
-                    <p className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                      <RoadIcon className="w-6 h-6 text-gray-900" />
-                      <span>{car.mileage?.toLocaleString()} km</span>
-                    </p>
-                  </div>
-                )}
-                {car.fuel && (
-                  <div className="bg-gray-50 p-4 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Combustível</p>
-                    <p className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                      <Fuel className="w-6 h-6 text-gray-900" />
-                      <span>{car.fuel}</span>
-                    </p>
-                  </div>
-                )}
-                {car.transmission && (
-                  <div className="bg-gray-50 p-4 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Transmissão</p>
-                    <p className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                      <ManualGearIcon className="w-6 h-6 text-gray-900" />
-                      <span>{car.transmission}</span>
-                    </p>
-                  </div>
-                )}
               </div>
 
               {/* Botões de Contacto */}

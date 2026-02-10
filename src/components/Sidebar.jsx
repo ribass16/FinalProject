@@ -1,11 +1,10 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { subscribeAgendamentos } from "../services/appointmentService";
 
 const Sidebar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { logout, user } = useAuth();
   const [pendingCount, setPendingCount] = useState(0);
 

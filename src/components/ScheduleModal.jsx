@@ -246,7 +246,7 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
   // Buscar horários ocupados GLOBALMENTE em tempo real (bloqueio entre todos os carros)
   useEffect(() => {
     if (!values.data || !isOpen) {
-      setHorariosOcupados([]);
+      setTimeout(() => setHorariosOcupados([]), 0);
       return;
     }
 

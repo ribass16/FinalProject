@@ -1,5 +1,5 @@
 import { db } from "./firebaseClient";
-import { collection, addDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 
 const favoritosRef = collection(db, "favoritos");
 

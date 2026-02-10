@@ -38,10 +38,25 @@ const CarForm = () => {
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(false);
+  
+  const [errors, setErrors] = useState({});
+
+  const vinRegex = /^[A-HJ-NPR-Z0-9]{17}$/i;
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "vin") {
+      if (value && !vinRegex.test(value)) {
+        error = "VIN inválido — deve ter 17 caracteres alfanuméricos.";
+      }
+    }
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    return !error;
+  };
 
   useEffect(() => {
     if (isEditMode && carToEdit) {
-      setFormData({
+      setTimeout(() => setFormData({
         brand: carToEdit.brand || "",
         model: carToEdit.model || "",
         year: carToEdit.year || new Date().getFullYear(),
@@ -63,21 +78,29 @@ const CarForm = () => {
         transmission: carToEdit.transmission || "Manual",
         color: carToEdit.color || "",
         origin: carToEdit.origin || "",
-      });
+      }), 0);
       
       // Carregar previews das imagens existentes
       if (carToEdit.images && carToEdit.images.length > 0) {
-        setImagePreviews(carToEdit.images);
+        setTimeout(() => setImagePreviews(carToEdit.images), 0);
       }
     }
   }, [isEditMode, carToEdit]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    let newValue = type === "checkbox" ? checked : value;
+    if (name === "vin") {
+      // normalize: uppercase, remove spaces, limit to 17 chars
+      newValue = String(newValue).toUpperCase().replace(/\s+/g, "").slice(0, 17);
+    }
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
+    if (name === "vin") {
+      validateField(name, newValue);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -94,7 +117,7 @@ const CarForm = () => {
           if (previews.length === files.length) {
             setImagePreviews(previews);
           }
-        };
+        }; 
         reader.readAsDataURL(file);
       });
     }
@@ -119,6 +142,16 @@ const CarForm = () => {
       alert("Por favor, preencha os campos obrigatórios: Marca, Modelo e Preço");
       setLoading(false);
       return;
+    }
+
+    // ve se tem 17 caracteres no VIN 
+    if (formData.vin) {
+      const valid = validateField('vin', formData.vin);
+      if (!valid) {
+        alert('Corrija os erros do formulário antes de submeter.');
+        setLoading(false);
+        return;
+      }
     }
 
     let imageUrls = [...(formData.images || [])];
@@ -198,7 +231,6 @@ const CarForm = () => {
         <h1 className="text-3xl font-bold text-gray-900">
           {isEditMode ? "Editar Carro" : "Adicionar Novo Carro"}
         </h1>
-        <p className="text-gray-600 mt-2">Preencha as informações do veículo com atenção</p>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
@@ -401,9 +433,12 @@ const CarForm = () => {
                 name="vin"
                 value={formData.vin}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-gray-900 transition-all ${errors.vin ? 'border-red-500' : 'border-gray-300 focus:border-gray-900'}`}
+                maxLength={17}
+                aria-invalid={!!errors.vin}
                 placeholder="Ex: WBA3B5C50EP123456"
               />
+              {errors.vin && <p className="text-sm text-red-600 mt-1">{errors.vin}</p>}
             </div>
 
             <div>
@@ -526,8 +561,7 @@ const CarForm = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all resize-none"
-              rows="4"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all resize-y h-28"
               placeholder="Descrição detalhada do veículo, características, equipamentos..."
             />
           </div>

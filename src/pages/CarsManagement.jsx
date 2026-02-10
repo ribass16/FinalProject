@@ -47,7 +47,6 @@ const CarsManagement = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Gestão de Carros</h1>
-          <p className="text-gray-600 mt-2">Gerir, editar e organizar o inventário</p>
         </div>
         <button
           onClick={() => navigate("/admin/add-car")}

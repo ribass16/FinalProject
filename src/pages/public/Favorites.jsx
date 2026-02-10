@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/public/PublicLayout';
 
 const Favoritos = () => {
-  const { user, userProfile } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [favoritos, setFavoritos] = useState([]);
   const [carros, setCarros] = useState([]);
@@ -21,7 +21,7 @@ const Favoritos = () => {
     const unsubscribeFavoritos = subscribeFavoritos(user.uid, setFavoritos);
     const unsubscribeCarros = subscribeAutomoveis(setCarros);
 
-    setLoading(false);
+    setTimeout(() => setLoading(false), 0);
 
     return () => {
       unsubscribeFavoritos();

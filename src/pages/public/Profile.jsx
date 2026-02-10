@@ -15,7 +15,7 @@ const Profile = () => {
   const [loadingAgendamentos, setLoadingAgendamentos] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedAgendamento, setSelectedAgendamento] = useState(null);
-  const [reviewedAgendamentos, setReviewedAgendamentos] = useState([]);
+
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
@@ -24,10 +24,10 @@ const Profile = () => {
 
   useEffect(() => {
     if (userProfile) {
-      setFormData({
+      setTimeout(() => setFormData({
         nome: userProfile.nome || "",
         telefone: userProfile.telefone || "",
-      });
+      }), 0);
     }
   }, [userProfile]);
 
@@ -42,13 +42,12 @@ const Profile = () => {
           setAgendamentos(activeAgendamentos);
           
           // Verificar quais agendamentos já têm review
-          const reviewChecks = await Promise.all(
+          // compute reviewed list but currently not used elsewhere
+          await Promise.all(
             result.data.map(async (agendamento) => {
-              const reviewResult = await hasUserReviewed(user.uid, agendamento.id);
-              return reviewResult.hasReviewed ? agendamento.id : null;
+              await hasUserReviewed(user.uid, agendamento.id);
             })
           );
-          setReviewedAgendamentos(reviewChecks.filter(id => id !== null));
         }
         setLoadingAgendamentos(false);
       }
@@ -97,7 +96,7 @@ const Profile = () => {
       } else {
         setMessage({ type: "error", text: "Erro ao atualizar perfil." });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: "error", text: "Erro ao atualizar perfil." });
     }
 

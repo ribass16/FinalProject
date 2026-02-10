@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuth, applyActionCode, checkActionCode } from 'firebase/auth';
@@ -30,7 +30,7 @@ const VerifyEmail = () => {
     if (verified === 'true' && user) {
       checkEmailVerification();
     }
-  }, [location, user]);
+  }, [location, user, handleActionCode, checkEmailVerification]);
 
   // Ouvir sinalização de verificação feita noutra aba
   useEffect(() => {
@@ -59,7 +59,7 @@ const VerifyEmail = () => {
           navigate('/login?verified=true');
         }, 2500);
       }
-    } catch (e) {
+    } catch {
       // ignora
     }
 
@@ -75,19 +75,19 @@ const VerifyEmail = () => {
       
       return () => clearInterval(interval);
     }
-  }, [isVerified, user]);
+  }, [isVerified, user, isProcessingLink, checkEmailVerification]);
 
-  const checkEmailVerification = async () => {
+  const checkEmailVerification = useCallback(async () => {
     try {
       if (!auth.currentUser) return;
-      
+
       // Recarregar o utilizador para obter emailVerified atualizado
       await auth.currentUser.reload();
-      
+
       if (auth.currentUser.emailVerified) {
         setIsVerified(true);
         setShowModal(true);
-        
+
         // Fechar modal e redirecionar após 3 segundos
         setTimeout(() => {
           setShowModal(false);
@@ -97,9 +97,9 @@ const VerifyEmail = () => {
     } catch (error) {
       console.error('Erro ao verificar email:', error);
     }
-  };
+  }, [auth, navigate]);
 
-  const handleActionCode = async (oobCode) => {
+  const handleActionCode = useCallback(async (oobCode) => {
     try {
       await checkActionCode(auth, oobCode);
       await applyActionCode(auth, oobCode);
@@ -118,7 +118,7 @@ const VerifyEmail = () => {
     } finally {
       setIsProcessingLink(false);
     }
-  };
+  }, [auth, navigate]);
 
   return (
     <>

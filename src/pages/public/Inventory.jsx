@@ -44,7 +44,7 @@ const Inventory = () => {
         car.price <= filters.priceRange.max
     );
 
-    setFilteredCars(filtered);
+    setTimeout(() => setFilteredCars(filtered), 0);
   }, [cars, filters]);
 
   if (loading) {

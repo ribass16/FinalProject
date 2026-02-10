@@ -19,7 +19,7 @@ const Login = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('verified') === 'true') {
-      setVerifiedMessage('✓ Email verificado com sucesso! Podes fazer login agora.');
+      setTimeout(() => setVerifiedMessage('✓ Email verificado com sucesso! Podes fazer login agora.'), 0);
       setTimeout(() => setVerifiedMessage(''), 5000);
     }
   }, [location]);
@@ -64,7 +64,7 @@ const Login = () => {
         setResetMessage('');
         setResetEmail('');
       }, 3000);
-    } catch (error) {
+    } catch {
       setResetMessage('✗ Erro ao enviar email. Verifica se o email está correto.');
     }
   };

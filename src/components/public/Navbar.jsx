@@ -48,7 +48,7 @@ const Navbar = () => {
     if (user && userProfile) {
       const isNewUser = localStorage.getItem(`newUser_${user.uid}`);
       if (isNewUser === 'true') {
-        setShowProfilePulse(true);
+        setTimeout(() => setShowProfilePulse(true), 0);
         // Remover animação após 10 segundos
         setTimeout(() => {
           setShowProfilePulse(false);

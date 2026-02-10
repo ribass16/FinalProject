@@ -27,12 +27,28 @@ const ChatBot = () => {
   const appointmentCreatedRef = useRef(false);
 
   /**
+   * Inicializar a conversa
+   */
+  function initializeChat() {
+    const stateMachine = stateMachineRef.current;
+    const response = stateMachine.processInput('', null);
+
+    const botMessage = {
+      type: 'bot',
+      text: response.message,
+      options: response.options,
+      timestamp: new Date()
+    };
+
+    setMessages([botMessage]);
+  }
+
+  /**
    * Subscrever aos carros reais da base de dados
    */
   useEffect(() => {
     const unsubscribe = subscribeAutomoveis((automoveis) => {
-      console.log('ChatBot recebeu carros da BD:', automoveis);
-      console.log('Primeiro carro (structure):', automoveis[0]);
+      // debug logs removed
       setCars(automoveis);
       // Atualizar a máquina de estados com os carros reais
       if (stateMachineRef.current) {
@@ -68,7 +84,7 @@ const ChatBot = () => {
       
       initializeChat();
     }
-  }, [isOpen, userProfile]);
+  }, [isOpen, userProfile, messages.length]);
 
   /**
    * Auto-scroll para a última mensagem
@@ -77,22 +93,7 @@ const ChatBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  /**
-   * Inicializar a conversa
-   */
-  const initializeChat = () => {
-    const stateMachine = stateMachineRef.current;
-    const response = stateMachine.processInput('', null);
-
-    const botMessage = {
-      type: 'bot',
-      text: response.message,
-      options: response.options,
-      timestamp: new Date()
-    };
-
-    setMessages([botMessage]);
-  };
+  /* duplicate initializeChat removed */
 
   /**
    * Processar resposta do utilizador
@@ -124,7 +125,7 @@ const ChatBot = () => {
 
       // Se houver redirecionamento (seleção de carro)
       if (response.redirectTo) {
-        console.log('ChatBot: Fechando e redirecionando para:', response.redirectTo);
+        // debug log removed
         setIsOpen(false);
         setMessages([]);
         stateMachineRef.current.reset();
@@ -182,7 +183,7 @@ const ChatBot = () => {
     try {
       await handleCreateAgendamento(lead);
       await sendChatbotLeadEmail(lead);
-      console.log('Lead enviado com sucesso:', lead);
+      // Lead sent successfully
     } catch (error) {
       console.error('Erro ao enviar lead:', error);
     }

@@ -3,8 +3,6 @@ import { subscribeAgendamentos } from '../services/appointmentService';
 import jsPDF from 'jspdf';
 import logoUrl from '../assets/logo.png';
 
-const formatDate = (iso) => iso || '';
-
 const timeToMinutes = (t) => {
   if (!t) return 0;
   const [h, m] = t.split(':').map(Number);

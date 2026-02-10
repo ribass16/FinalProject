@@ -1,5 +1,5 @@
 import { db } from './firebaseClient';
-import { collection, addDoc, getDocs, query, where, orderBy, limit, doc, getDoc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, limit, Timestamp } from 'firebase/firestore';
 
 const reviewsCollection = collection(db, 'reviews');
 

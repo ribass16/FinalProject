@@ -50,16 +50,7 @@ export class ChatbotStateMachine {
 
   updateCars(cars) {
     this.allCars = cars;
-    console.log('State Machine updateCars - Todos os carros da BD:', cars.map(c => ({
-      id: c.id,
-      brand: c.brand,
-      model: c.model,
-      category: c.category,
-      price: c.price,
-      preco: c.preco,
-      available: c.available,
-      allFields: Object.keys(c)
-    })));
+    // debug logs apagadas
   }
 
   //filtrar carros por orcamento
@@ -97,13 +88,7 @@ export class ChatbotStateMachine {
       filtered = filtered.filter(c => c.category === this.lead.carType);
     }
 
-    console.log('DEBUG getCarsByBudget:', {
-      budgetKey,
-      carType: this.lead.carType,
-      totalCars: this.allCars.length,
-      filteredCount: filtered.length,
-      filtered: filtered.map(c => ({ id: c.id, brand: c.brand, model: c.model, category: c.category, price: c.price || c.preco }))
-    });
+    
 
     return filtered;
   }
@@ -128,7 +113,7 @@ export class ChatbotStateMachine {
     let message = '';
     let options = [];
 
-    console.log('🔄 processInput - Estado atual:', this.currentState, 'inputKey:', inputKey);
+    // debug logs removed
     if (this.currentState === STATES.START) {
       message = 'Olá! 👋 Em que posso ajudá-lo?';
       options = [
@@ -265,7 +250,7 @@ export class ChatbotStateMachine {
         // Extrair ID do carro do inputKey (é uma string do Firestore)
         const carId = inputKey.replace('car_', '');
         
-        console.log('DEBUG BROWSE_CARS - Redirecting to car:', carId);
+        // debug logs removed
         
         message = 'Redirecting...';
         options = [];

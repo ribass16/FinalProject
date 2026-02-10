@@ -8,7 +8,6 @@ const EmailAction = () => {
   const auth = getAuth();
   const [status, setStatus] = useState('loading'); 
   const [message, setMessage] = useState('');
-  const [modeState, setModeState] = useState(null);
   const [oobCodeState, setOobCodeState] = useState(null);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,61 +15,53 @@ const EmailAction = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    handleEmailAction();
-  }, []);
+    // executar no efeito para evitar aviso de dependências
+    const run = async () => {
+      const params = new URLSearchParams(location.search);
+      const mode = params.get('mode');
+      const oobCode = params.get('oobCode');
+      setOobCodeState(oobCode);
 
-  const handleEmailAction = async () => {
-    const params = new URLSearchParams(location.search);
-    const mode = params.get('mode');
-    const oobCode = params.get('oobCode');
-    setModeState(mode);
-    setOobCodeState(oobCode);
-
-    console.log('DEBUG - mode:', mode, 'oobCode:', oobCode); // DEBUG
-
-    if (!oobCode) {
-      setStatus('error');
-      setMessage('Link inválido ou expirado');
-      return;
-    }
-
-    try {
-      // Verificar o código primeiro
-      await checkActionCode(auth, oobCode);
-
-      // se o modo for verificação de email 
-      if (mode === 'verifyEmail') {
-        await applyActionCode(auth, oobCode);
-        setStatus('success');
-        setMessage('Email verificado com sucesso!');
-
-        // Sinalizar para outras abas que a verificação foi concluída
-        try {
-          localStorage.setItem('email_verification_done', Date.now().toString());
-        } catch (e) {
-          console.warn('Não foi possível gravar em localStorage:', e);
-        }
-
-        // Redirecionar para login após 3 segundos
-        setTimeout(() => {
-          navigate('/login?verified=true');
-        }, 3000);
-      }
-
-      // Se for recuperação de senha, mostramos o formulário para nova senha
-      if (mode === 'resetPassword') {
-        setStatus('reset');
-        setMessage('Por favor, insere a nova senha.');
+      if (!oobCode) {
+        setStatus('error');
+        setMessage('Link inválido ou expirado');
         return;
       }
-    } catch (error) {
-      console.error('Erro:', error);
-      setStatus('error');
-      setMessage(error.code === 'auth/invalid-action-code' 
-        ? 'Link inválido ou já utilizado' 
-        : 'Erro ao processar a ação do email');
-    }
-  };
+
+      try {
+        await checkActionCode(auth, oobCode);
+
+        if (mode === 'verifyEmail') {
+          await applyActionCode(auth, oobCode);
+          setStatus('success');
+          setMessage('Email verificado com sucesso!');
+
+          try {
+            localStorage.setItem('email_verification_done', Date.now().toString());
+          } catch (e) {
+            console.warn('Não foi possível gravar em localStorage:', e);
+          }
+
+          setTimeout(() => navigate('/login?verified=true'), 3000);
+        }
+
+        if (mode === 'resetPassword') {
+          setStatus('reset');
+          setMessage('Por favor, insere a nova senha.');
+          return;
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        setStatus('error');
+        setMessage(error.code === 'auth/invalid-action-code'
+          ? 'Link inválido ou já utilizado'
+          : 'Erro ao processar a ação do email');
+      }
+    };
+
+    const t = setTimeout(() => run(), 0);
+    return () => clearTimeout(t);
+  }, [location.search, auth, navigate]);
 
   const handleResetSubmit = async (e) => {
     e.preventDefault();

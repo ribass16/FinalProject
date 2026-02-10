@@ -106,7 +106,7 @@ export const sendChatbotLeadEmail = async (lead) => {
       PUBLIC_KEY
     );
 
-    console.log('Lead enviado com sucesso:', response);
+    // enviado com sucesso 
     return { success: true, response };
   } catch (error) {
     console.error('Erro ao enviar lead do chatbot:', error);

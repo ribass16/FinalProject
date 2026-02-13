@@ -46,12 +46,12 @@ const Contact = () => {
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Telemóvel</h3>
                   <a
-                    href="tel:+351912345678"
+                    href="tel:+351916081792"
                     className="text-gray-600 hover:text-blue-600 transition-colors block mb-1"
                   >
-                    +351 912 345 678
+                    +351 916 081 792
                   </a>
-                  {/* removed secondary phone number as requested */}
+                  {}
                 </div>
               </div>
             </div>
@@ -208,7 +208,9 @@ const Contact = () => {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
-              href="https://wa.me/351912345678"
+              href={`https://wa.me/351916081792?text=${encodeURIComponent(
+                'Olá, gostaria de obter mais informações sobre os vossos veículos.'
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl inline-flex items-center gap-3"
@@ -219,7 +221,7 @@ const Contact = () => {
               <span>WhatsApp</span>
             </a>
             <a
-              href="tel:+351912345678"
+              href="tel:+351916081792"
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { subscribeAutomoveis } from "../services/firestoreService";
 import { subscribeAgendamentos } from "../services/appointmentService";
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/authContextObject';
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {

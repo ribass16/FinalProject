@@ -69,11 +69,10 @@ const Home = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-6xl font-black mb-6 animate-fadeIn">
-              Encontre o Seu Carro dos Sonhos
+              Encontre a sua próxima viatura.
             </h1>
-            <p className="text-xl text-gray-300 mb-8 animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-              A maior seleção de veículos premium com as melhores condições do mercado. 
-              Qualidade garantida e total transparência.
+            <p className="text-xl text-gray-300 mb-8 animate-fadeIn text-center" style={{ animationDelay: "0.2s" }}>
+              Viaturas selecionadas com rigor. Confiança em cada quilómetro.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fadeIn px-4" style={{ animationDelay: "0.4s" }}>
               <button
@@ -124,7 +123,7 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-black text-gray-900">
+            <h2 className="text-3xl sm:text-5xl font-black text-gray-900">
               Viaturas em Destaque
             </h2>
           </div>
@@ -142,7 +141,7 @@ const Home = () => {
                   >
                     {featuredCars.map((car) => (
                       <div key={car.id} className="min-w-full">
-                        <div className="relative bg-gray-50 aspect-[4/3] sm:aspect-[16/9] md:aspect-[18/8] flex items-center justify-center">
+                        <div className="relative bg-gray-50 h-64 sm:h-[360px] md:h-[500px] flex items-center justify-center">
                           {/* Imagem do Carro */}
                           <img
                             src={car.image || "https://via.placeholder.com/1200x675?text=Sem+Imagem"}
@@ -168,12 +167,12 @@ const Home = () => {
                                     {car.category}
                                   </span>
                                 </div>
-                                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black">
+                                <h3 className="text-xl sm:text-3xl md:text-4xl font-black">
                                   {car.brand} {car.model}
                                 </h3>
                               </div>
                               <div className="w-full sm:w-auto text-left sm:text-right">
-                                <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-2 sm:mb-3">
+                                <div className="text-2xl sm:text-4xl md:text-5xl font-black mb-2 sm:mb-3">
                                   {car.price?.toLocaleString('pt-PT')} €
                                 </div>
                                 <button

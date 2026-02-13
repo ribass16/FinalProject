@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/authContextObject';
 import { subscribeFavoritos, removeFavorito } from '../../services/favoritesService';
 import { subscribeAutomoveis } from '../../services/firestoreService';
 import { useNavigate } from 'react-router-dom';

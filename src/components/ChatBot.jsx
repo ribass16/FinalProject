@@ -4,7 +4,7 @@ import ChatbotStateMachine, { STATES } from '../services/chatbotStateMachine';
 import { sendChatbotLeadEmail } from '../services/emailService';
 import { createAgendamento } from '../services/appointmentService';
 import { subscribeAutomoveis } from '../services/firestoreService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/authContextObject';
 
 /**
  * Componente ChatBot - Widget flutuante

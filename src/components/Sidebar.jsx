@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/authContextObject";
 import { useState, useEffect } from "react";
 import { subscribeAgendamentos } from "../services/appointmentService";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { logout, user } = useAuth();
   const [pendingCount, setPendingCount] = useState(0);
@@ -39,7 +39,11 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 text-white z-50">
+    <aside
+      className={`fixed top-0 left-0 h-screen w-72 bg-slate-900 text-white z-50 transform transition-transform duration-300
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+      aria-hidden={!isOpen}
+    >
       {/* Logo */}
       <div className="flex flex-col justify-center px-6 h-24 border-b border-slate-700">
         <div className="text-2xl font-extrabold leading-none">
@@ -57,6 +61,7 @@ const Sidebar = () => {
             <li key={item.path}>
               <Link
                 to={item.path}
+                onClick={() => onClose && onClose()}
                 className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive(item.path)
                     ? "bg-primary-600 text-white shadow-lg"

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/authContextObject";
 import { addFavorito, removeFavorito, isFavorito } from "../../services/favoritesService";
 import { Calendar, Fuel } from "lucide-react";
 import RoadIcon from "../icons/RoadIcon";

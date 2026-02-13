@@ -83,7 +83,7 @@ const CarDetails = () => {
 
   const handleContact = () => {
     const message = `Olá! Estou interessado no ${car.brand} ${car.model} (${car.year})`;
-    const whatsappUrl = `https://wa.me/351912345678?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/351916081792?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 

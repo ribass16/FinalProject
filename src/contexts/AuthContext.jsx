@@ -1,13 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AuthContext } from './authContextObject';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
 import { getUserProfile } from '../services/userService';
 import { app } from '../services/firebaseClient';
 
 const auth = getAuth(app);
-
-const AuthContext = createContext();
-
-export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -69,4 +66,5 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export { AuthContext };
+// `AuthContext` is intentionally not exported to keep this file exporting
+// only the hook and provider (avoids react-refresh/only-export-components rule).

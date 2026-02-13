@@ -97,8 +97,15 @@ export const subscribeAgendamentos = (callback) => {
 export const updateAgendamentoStatus = async (id, status) => {
   try {
     const docRef = doc(db, "agendamentos", id);
+
+    // se tiver concluido o agendamento é apagado
+    if (status === 'concluido') {
+      await deleteDoc(docRef);
+      return { success: true, deleted: true };
+    }
+
     await updateDoc(docRef, { status });
-    return { success: true };
+    return { success: true, deleted: false };
   } catch (error) {
     console.error("Erro ao atualizar status:", error);
     return { success: false, error: error.message };

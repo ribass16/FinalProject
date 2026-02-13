@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createReview } from '../services/reviewService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/authContextObject';
 
 const ReviewModal = ({ isOpen, onClose, agendamento }) => {
   const { user, userProfile } = useAuth();

@@ -1,6 +1,6 @@
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/authContextObject';
 import { useForm } from '../../hooks/useForm'; 
 import { validateLogin } from '../../utils/validators';
 import { getUserProfile } from '../../services/userService';

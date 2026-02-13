@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/authContextObject';
 import { useState } from 'react';
 import { createUserProfile } from '../../services/userService';
 import { sendEmailVerification } from 'firebase/auth';
@@ -179,7 +179,7 @@ const Register = () => {
                   maxLength={9}
                   pattern="[0-9]*"
                   onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
-                  placeholder="912345678"
+                  placeholder="916081792"
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gray-900 focus:ring-2 focus:ring-gray-900/20 transition-all outline-none"
                 />
                 {errors.telefone && <p className="text-red-600 text-sm mt-2 flex items-center gap-1">

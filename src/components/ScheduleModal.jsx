@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createAgendamento } from '../services/appointmentService';
 import { useForm } from '../hooks/useForm';
 import { validateAgendamento } from '../utils/validators';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/authContextObject';
 import { db } from '../services/firebaseClient';
 import { collection, onSnapshot } from 'firebase/firestore';
 
@@ -401,7 +401,7 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
                 pattern="[0-9]*"
                 onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                placeholder="912345678"
+                placeholder="916081792"
               />
               {errors.telefone && <p className="text-red-600 text-sm mt-1">{errors.telefone}</p>}
             </div>

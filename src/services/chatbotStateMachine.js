@@ -148,7 +148,7 @@ export class ChatbotStateMachine {
           nextState = STATES.COLLECT_NAME;
         }
       } else if (inputKey === 'contact') {
-        message = '📞 **Contactos**\n\n📱 Telemóvel: +351 912 345 678\n📧 Email: amralcarpopup@gmail.com\n📍 Instagram: @amaralcar_2021\n🕐 Horário: Segunda-Sexta 09:30-19:30 | Sábado-Domingo Encerrado\n🗺️ Morada: Av. João de Belas 37C, 2605-209 Belas, Portugal';
+        message = '📞 **Contactos**\n\n📱 Telemóvel: +351 916 081 792\n📧 Email: amralcarpopup@gmail.com\n📍 Instagram: @amaralcar_2021\n🕐 Horário: Segunda-Sexta 09:30-19:30 | Sábado-Domingo Encerrado\n🗺️ Morada: Av. João de Belas 37C, 2605-209 Belas, Portugal';
         options = [
           { key: 'back_menu', label: '← Voltar' }
         ];

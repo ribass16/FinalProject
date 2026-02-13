@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/authContextObject";
 import { updateUserProfile } from "../../services/userService";
 import { getUserAgendamentos, updateAgendamentoStatus } from "../../services/appointmentService";
 import { useNavigate } from "react-router-dom";

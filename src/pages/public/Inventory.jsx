@@ -10,7 +10,13 @@ const Inventory = () => {
   const [filters, setFilters] = useState({
     category: "all",
     availability: "all",
+    brand: "all",
+    model: "all",
     priceRange: { min: 0, max: Infinity },
+    yearRange: { min: 0, max: Infinity },
+    mileageRange: { min: 0, max: Infinity },
+    fuelTypes: [],
+    transmissions: []
   });
 
   useEffect(() => {
@@ -37,12 +43,41 @@ const Inventory = () => {
       filtered = filtered.filter((car) => !car.available);
     }
 
-    // Filtro de preco
-    filtered = filtered.filter(
-      (car) =>
-        car.price >= filters.priceRange.min &&
-        car.price <= filters.priceRange.max
-    );
+    // Marca / Modelo
+    if (filters.brand && filters.brand !== 'all') {
+      filtered = filtered.filter(car => car.brand === filters.brand);
+    }
+    if (filters.model && filters.model !== 'all') {
+      filtered = filtered.filter(car => car.model === filters.model);
+    }
+
+    // Filtro de preço
+    filtered = filtered.filter((car) => {
+      const price = Number(car.price || 0);
+      return price >= (filters.priceRange.min || 0) && price <= (filters.priceRange.max === Infinity ? Infinity : filters.priceRange.max);
+    });
+
+    // Ano
+    filtered = filtered.filter((car) => {
+      const year = Number(car.year || 0);
+      return year >= (filters.yearRange.min || 0) && year <= (filters.yearRange.max === Infinity ? Infinity : filters.yearRange.max);
+    });
+
+    // Quilometragem
+    filtered = filtered.filter((car) => {
+      const mileage = Number(car.mileage || car.mileageKm || 0);
+      return mileage >= (filters.mileageRange.min || 0) && mileage <= (filters.mileageRange.max === Infinity ? Infinity : filters.mileageRange.max);
+    });
+
+    // Fuel types (if any selected)
+    if (filters.fuelTypes && filters.fuelTypes.length > 0) {
+      filtered = filtered.filter(car => filters.fuelTypes.includes((car.fuel || car.combustivel || '').toString()));
+    }
+
+    // Transmissions
+    if (filters.transmissions && filters.transmissions.length > 0) {
+      filtered = filtered.filter(car => filters.transmissions.includes((car.transmission || car.gearbox || '').toString()));
+    }
 
     setTimeout(() => setFilteredCars(filtered), 0);
   }, [cars, filters]);
@@ -94,7 +129,6 @@ const Inventory = () => {
           </div>
         ) : (
           <div className="text-center py-20">
-            <div className="text-8xl mb-6">🔍</div>
             <h3 className="text-3xl font-bold text-gray-800 mb-4">
               Nenhum carro encontrado
             </h3>
@@ -109,7 +143,7 @@ const Inventory = () => {
                   priceRange: { min: 0, max: Infinity },
                 })
               }
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition-all duration-300 hover:scale-105"
             >
               Limpar Filtros
             </button>

@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/authContextObject";
 import logo from "../../assets/logo.png";
 import { useRef, useState as useStateLocal } from 'react';
 

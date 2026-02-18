@@ -139,7 +139,7 @@ export class ChatbotStateMachine {
       } else if (inputKey === 'visit') {
         // Se utilizador está logado, pula para data; caso contrário, pede nome
         if (this.userLoggedIn && this.lead.name && this.lead.email) {
-          message = `Perfeito, ${this.lead.name}! Que data prefere para a visita? (DD/MM/YYYY)`;
+          message = `Perfeito, ${this.lead.name}! Que data prefere para a visita? (dia/mes/ano)`;
           options = [];
           nextState = STATES.COLLECT_DATE;
         } else {
@@ -362,7 +362,7 @@ export class ChatbotStateMachine {
         nextState = STATES.COLLECT_EMAIL;
       } else {
         this.lead.email = userInput.trim();
-        message = 'Perfeito! Que data prefere para a visita? (DD/MM/YYYY)';
+        message = 'Perfeito! Que data prefere para a visita? (dia/mes/ano)';
         options = [
           { key: 'back_menu', label: '← Voltar' }
         ];
@@ -381,7 +381,7 @@ export class ChatbotStateMachine {
         ];
         nextState = STATES.MAIN_MENU;
       } else if (!this.isValidDate(userInput)) {
-        message = 'Por favor, insira uma data válida (DD/MM/YYYY).';
+        message = 'Por favor, insira uma data válida (dia/mes/ano).';
         options = [
           { key: 'back_menu', label: '← Voltar' }
         ];
@@ -424,7 +424,7 @@ export class ChatbotStateMachine {
     // Menu Coletar Hora
     else if (this.currentState === STATES.COLLECT_TIME && inputKey) {
       if (inputKey === 'back_date') {
-        message = 'Perfeito! Que data prefere para a visita? (DD/MM/YYYY)';
+        message = 'Perfeito! Que data prefere para a visita? (dia/mes/ano)';
         options = [
           { key: 'back_menu', label: '← Voltar' }
         ];

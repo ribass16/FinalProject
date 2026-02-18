@@ -36,3 +36,21 @@ html {
 html, body {
   overflow-x: hidden;
 }
+
+
+.chat-scrollbar {
+  scrollbar-width: thin; 
+  scrollbar-color: #111827 transparent; 
+}
+.chat-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #111827; 
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}

@@ -241,7 +241,7 @@ const ChatBot = () => {
           </div>
 
           {/* Mensagens */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 chat-scrollbar">
             {messages.length === 0 ? (
               <div className="flex items-center justify-center h-full text-gray-400">
                 <p className="text-center">Carregando...</p>

@@ -120,10 +120,9 @@ const Navbar = () => {
                 {userProfile?.role === 'admin' && (
                   <button
                     onClick={() => navigate('/admin')}
-                    className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
+                    className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300"
                   >
-                    <span>🔐</span>
-                    <span>Área Admin</span>
+                    Área Admin
                   </button>
                 )}
                 <div className="relative">
@@ -140,7 +139,7 @@ const Navbar = () => {
                     </svg>
                     <span>{userProfile?.nome || user.email}</span>
                   </button>
-                  {showProfilePulse && (
+                  {showProfilePulse && !location.pathname.startsWith('/admin') && (
                     <div className="absolute -top-1 -right-1">
                       <span className="relative flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -242,7 +241,7 @@ const Navbar = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     <span>{userProfile?.nome || user.email}</span>
-                    {showProfilePulse && (
+                    {showProfilePulse && !location.pathname.startsWith('/admin') && (
                       <span className="ml-auto relative flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>

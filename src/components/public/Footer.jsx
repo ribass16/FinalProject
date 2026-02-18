@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { useAuth } from '../../contexts/authContextObject';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  const { user, userProfile } = useAuth();
 
   return (
   <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white mt-20">
@@ -44,11 +47,13 @@ const Footer = () => {
                   → Contacto
                 </Link>
               </li>
-              <li>
-                <Link to="/admin" className="text-gray-300 hover:text-white hover:translate-x-1 inline-block transition-all">
-                  → Área Admin
-                </Link>
-              </li>
+              {user && userProfile?.role === 'admin' && (
+                <li>
+                  <Link to="/admin" className="text-gray-300 hover:text-white hover:translate-x-1 inline-block transition-all">
+                    → Área Admin
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

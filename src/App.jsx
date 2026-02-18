@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ActionHandler from './components/ActionHandler';
@@ -31,6 +31,10 @@ import Profile from "./pages/public/Profile";
 import "./App.css";
 
 function App() {
+  const ChatbotVisibility = () => {
+    const location = useLocation();
+    return !location.pathname.startsWith('/admin') ? <ChatBot /> : null;
+  };
   return (
     <Router>
       <AuthProvider>
@@ -86,7 +90,7 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Dashboard">
                 <Dashboard />
               </Layout>
             </ProtectedRoute>
@@ -96,7 +100,7 @@ function App() {
           path="/admin/cars"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Gestão de Carros">
                 <CarsManagement />
               </Layout>
             </ProtectedRoute>
@@ -106,7 +110,7 @@ function App() {
           path="/admin/add-car"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Adicionar Carro">
                 <CarForm />
               </Layout>
             </ProtectedRoute>
@@ -116,7 +120,7 @@ function App() {
           path="/admin/edit-car/:id"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Editar Carro">
                 <CarForm />
               </Layout>
             </ProtectedRoute>
@@ -126,7 +130,7 @@ function App() {
           path="/admin/agendamentos"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Agendamentos">
                 <Agendamentos />
               </Layout>
             </ProtectedRoute>
@@ -136,7 +140,7 @@ function App() {
           path="/admin/relatorios"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Relatórios">
                 <Relatorios />
               </Layout>
             </ProtectedRoute>
@@ -146,7 +150,7 @@ function App() {
           path="/admin/calendario"
           element={
             <ProtectedRoute>
-              <Layout>
+              <Layout title="Calendário">
                 <Calendario />
               </Layout>
             </ProtectedRoute>
@@ -160,7 +164,7 @@ function App() {
         <Route path="/__/auth/action" element={<EmailAction />} />
         </Routes>
         </ActionHandler>
-        <ChatBot />
+        <ChatbotVisibility />
       </AuthProvider>
     </Router>
   );

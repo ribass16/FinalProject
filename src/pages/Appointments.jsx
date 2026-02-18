@@ -60,7 +60,7 @@ const Agendamentos = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Agendamentos</h1>
+        {/* Title is shown in the Layout header; avoid repeating here */}
       </div>
 
       {/* Filtros */}

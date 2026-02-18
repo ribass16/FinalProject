@@ -9,20 +9,25 @@ const timeToMinutes = (t) => {
   return h * 60 + (m || 0);
 };
 
-const svgToPngDataUrl = (svgText, width = 300, height = 80) => {
+const loadImageDataUrl = (url, width = 300, height = 80) => {
   return new Promise((resolve, reject) => {
-    const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       try {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // draw image centered preserving aspect ratio
+        const ratio = Math.min(width / img.width, height / img.height);
+        const dw = img.width * ratio;
+        const dh = img.height * ratio;
+        const dx = (width - dw) / 2;
+        const dy = (height - dh) / 2;
+        ctx.drawImage(img, dx, dy, dw, dh);
         const dataUrl = canvas.toDataURL('image/png');
         resolve(dataUrl);
       } catch (e) {
@@ -30,7 +35,7 @@ const svgToPngDataUrl = (svgText, width = 300, height = 80) => {
       }
     };
     img.onerror = (e) => reject(e);
-    img.src = svg;
+    img.src = url;
   });
 };
 
@@ -52,9 +57,7 @@ const Relatorios = () => {
   const exportPDF = async () => {
     let logoPng = null;
     try {
-      const resp = await fetch(logoUrl);
-      const svgText = await resp.text();
-      logoPng = await svgToPngDataUrl(svgText, 160, 48);
+      logoPng = await loadImageDataUrl(logoUrl, 160, 48);
     } catch (e) {
       console.warn('Não foi possível carregar o logo para o PDF:', e);
     }
@@ -124,7 +127,7 @@ const Relatorios = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Relatórios</h1>
+        {/* Title is shown in the Layout header; avoid repeating here */}
         <div className="flex items-center gap-3">
           <input
             type="date"

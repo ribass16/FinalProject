@@ -2,7 +2,7 @@ import Sidebar from "./Sidebar";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, title = 'Dashboard' }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -38,9 +38,9 @@ const Layout = ({ children }) => {
         <div className="min-h-[calc(100vh-48px)] bg-white rounded-[50px] shadow-2xl overflow-hidden flex flex-col mx-4 md:mx-8 lg:mx-12">
           {/* Header interno */}
           <div className="h-20 border-b border-gray-100 flex items-center justify-between px-6 md:px-12">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{title}</h1>
             <div className="flex items-center gap-4">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full" />
+              {/* decorative avatar removed to avoid duplicate/undesired bubble in header */}
             </div>
           </div>
 

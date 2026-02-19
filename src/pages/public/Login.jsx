@@ -34,6 +34,19 @@ const Login = () => {
       const userCredential = await login(values.email, values.password);
       await userCredential.user.reload();
 
+      if (values.email === 'admin@admin.com') {
+        // Skip email verification for this specific admin email
+        const profileResult = await getUserProfile(userCredential.user.uid);
+        const isAdmin = profileResult.success && profileResult.data.role === 'admin';
+
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+        return;
+      }
+
       if (!userCredential.user.emailVerified) {
         await logout();
         alert('Precisas verificar o email antes de entrar. Clica no link enviado para a tua caixa de correio.');

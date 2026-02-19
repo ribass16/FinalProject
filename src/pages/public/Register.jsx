@@ -76,10 +76,10 @@ const Register = () => {
       const result = await createUserProfile(userCredential.user.uid, profileData);
       
       if (result.success) {
-          // Enviar email de verificação apontando para o ambiente atual (localhost ou deploy)
+        // Skip email verification for admin users
+        if (!isAdmin) {
           const currentUrl = window.location.origin;
           const actionCodeSettings = {
-            // Aponta para o handler do Firebase no mesmo domínio (dev ou prod)
             url: `${currentUrl}/__/auth/action`,
             handleCodeInApp: true,
           };
@@ -100,6 +100,9 @@ const Register = () => {
 
           // Redirecionar para página de verificação
           navigate('/verify-email');
+        } else {
+          navigate('/dashboard'); // Redirect admin directly to dashboard
+        }
       } else {
         alert('Erro ao criar conta: ' + result.error);
       }

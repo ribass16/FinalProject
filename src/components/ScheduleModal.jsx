@@ -316,7 +316,7 @@ const AgendarModal = ({ isOpen, onClose, carId, carName }) => {
         <div className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center animate-fadeIn">
           <div className="text-6xl mb-4">✅</div>
           <h2 className="text-3xl font-black text-gray-900 mb-4">
-            Agendamento Confirmado!
+            Agendamento Recebido!
           </h2>
           <p className="text-gray-600">
             Recebemos o seu pedido. Entraremos em contacto em breve.

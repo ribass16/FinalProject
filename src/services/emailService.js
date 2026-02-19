@@ -13,7 +13,6 @@ emailjs.init(PUBLIC_KEY);
 export const sendConfirmacaoEmail = async (agendamentoData) => {
   try {
     
-    
     const templateParams = {
       customer_name: agendamentoData.nome,
       email: agendamentoData.email,
@@ -61,6 +60,32 @@ export const sendRecusaEmail = async (agendamentoData) => {
     return { success: true, response };
   } catch (error) {
     console.error('Erro ao enviar email de recusa:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Envia email de agendamento recebido
+export const sendAgendamentoRecebidoEmail = async (agendamentoData) => {
+  try {
+    const templateParams = {
+      customer_name: agendamentoData.nome,
+      email: agendamentoData.email,
+      car_name: agendamentoData.carroNome || agendamentoData.carName || 'Não especificado',
+      date: agendamentoData.data,
+      time: agendamentoData.hora,
+    };
+
+    const response = await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_CONFIRMADO,
+      templateParams,
+      PUBLIC_KEY
+    );
+
+    // agendamento recebido email sent
+    return { success: true, response };
+  } catch (error) {
+    console.error('Erro ao enviar email de agendamento recebido:', error);
     return { success: false, error: error.message };
   }
 };

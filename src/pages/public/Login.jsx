@@ -6,7 +6,7 @@ import { validateLogin } from '../../utils/validators';
 import { getUserProfile } from '../../services/userService';
 
 const Login = () => {
-  const { login, resetPassword } = useAuth();
+  const { login, resetPassword, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showResetPassword, setShowResetPassword] = useState(false);
@@ -32,6 +32,13 @@ const Login = () => {
   const onSubmit = async () => {
     try {
       const userCredential = await login(values.email, values.password);
+      await userCredential.user.reload();
+
+      if (!userCredential.user.emailVerified) {
+        await logout();
+        alert('Precisas verificar o email antes de entrar. Clica no link enviado para a tua caixa de correio.');
+        return;
+      }
       
       // Buscar perfil para verificar role
       const profileResult = await getUserProfile(userCredential.user.uid);

@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContextObject';
 import { getAuth, applyActionCode, checkActionCode } from 'firebase/auth';
 
+const EMAIL_VERIFICATION_FLAG_KEY = 'email_verification_done';
+const EMAIL_VERIFICATION_FLAG_TTL_MS = 5 * 60 * 1000;
+
 const VerifyEmail = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,81 +17,16 @@ const VerifyEmail = () => {
   const [isProcessingLink, setIsProcessingLink] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Processar link do email mesmo sem sessão ativa
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const mode = params.get('mode');
-    const oobCode = params.get('oobCode');
-
-    if (mode === 'verifyEmail' && oobCode) {
-      setIsProcessingLink(true);
-      handleActionCode(oobCode);
-      return;
-    }
-
-    const verified = params.get('verified');
-    if (verified === 'true' && user) {
-      checkEmailVerification();
-    }
-  }, [location, user, handleActionCode, checkEmailVerification]);
-
-  // Ouvir sinalização de verificação feita noutra aba
-  useEffect(() => {
-    const onStorage = (e) => {
-      if (e.key === 'email_verification_done') {
-        // Mostrar modal e redirecionar localmente
-        setIsVerified(true);
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate('/login?verified=true');
-        }, 2500);
-      }
-    };
-
-    window.addEventListener('storage', onStorage);
-
-    // Se já existir a flag (caso a ação tenha ocorrido antes de ouvirmos)
-    try {
-      const flag = localStorage.getItem('email_verification_done');
-      if (flag) {
-        setIsVerified(true);
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate('/login?verified=true');
-        }, 2500);
-      }
-    } catch {
-      // ignora
-    }
-
-    return () => window.removeEventListener('storage', onStorage);
-  }, [navigate]);
-
-  // Verificação periódica a cada 3 segundos
-  useEffect(() => {
-    if (!isVerified && user && !isProcessingLink) {
-      const interval = setInterval(() => {
-        checkEmailVerification();
-      }, 3000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isVerified, user, isProcessingLink, checkEmailVerification]);
-
   const checkEmailVerification = useCallback(async () => {
     try {
       if (!auth.currentUser) return;
 
-      // Recarregar o utilizador para obter emailVerified atualizado
       await auth.currentUser.reload();
 
       if (auth.currentUser.emailVerified) {
         setIsVerified(true);
         setShowModal(true);
 
-        // Fechar modal e redirecionar após 3 segundos
         setTimeout(() => {
           setShowModal(false);
           navigate('/');
@@ -119,6 +57,79 @@ const VerifyEmail = () => {
       setIsProcessingLink(false);
     }
   }, [auth, navigate]);
+
+  // Processar link do email mesmo sem sessão ativa
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const mode = params.get('mode');
+    const oobCode = params.get('oobCode');
+
+    if (mode === 'verifyEmail' && oobCode) {
+      setIsProcessingLink(true);
+      handleActionCode(oobCode);
+      return;
+    }
+
+    const verified = params.get('verified');
+    if (verified === 'true' && user) {
+      checkEmailVerification();
+    }
+  }, [location, user, handleActionCode, checkEmailVerification]);
+
+  // Ouvir sinalização de verificação feita noutra aba
+  useEffect(() => {
+    const isFreshFlag = (value) => {
+      const timestamp = Number(value);
+      if (!Number.isFinite(timestamp)) return false;
+      return Date.now() - timestamp <= EMAIL_VERIFICATION_FLAG_TTL_MS;
+    };
+
+    const consumeFlagAndRedirect = (value) => {
+      if (!isFreshFlag(value)) {
+        localStorage.removeItem(EMAIL_VERIFICATION_FLAG_KEY);
+        return;
+      }
+
+      localStorage.removeItem(EMAIL_VERIFICATION_FLAG_KEY);
+      setIsVerified(true);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/login?verified=true');
+      }, 2500);
+    };
+
+    const onStorage = (e) => {
+      if (e.key === EMAIL_VERIFICATION_FLAG_KEY && e.newValue) {
+        consumeFlagAndRedirect(e.newValue);
+      }
+    };
+
+    window.addEventListener('storage', onStorage);
+
+    // Se já existir a flag (caso a ação tenha ocorrido antes de ouvirmos)
+    try {
+      const flag = localStorage.getItem(EMAIL_VERIFICATION_FLAG_KEY);
+      if (flag) {
+        consumeFlagAndRedirect(flag);
+      }
+    } catch {
+      // ignora
+    }
+
+    return () => window.removeEventListener('storage', onStorage);
+  }, [navigate]);
+
+  // Verificação periódica a cada 3 segundos
+  useEffect(() => {
+    if (!isVerified && user && !isProcessingLink) {
+      const interval = setInterval(() => {
+        checkEmailVerification();
+      }, 3000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isVerified, user, isProcessingLink, checkEmailVerification]);
 
   return (
     <>

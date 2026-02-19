@@ -9,9 +9,10 @@ const ActionHandler = ({ children }) => {
     const params = new URLSearchParams(location.search);
     const mode = params.get('mode');
     const oobCode = params.get('oobCode');
+    const isOnActionPage = location.pathname === '/__/auth/action';
 
     // Se tiver parametros  de acao do Firebase manda para a pagina certa
-    if (mode && oobCode) {
+    if (mode && oobCode && !isOnActionPage) {
       if (mode === 'resetPassword' || mode === 'verifyEmail') {
         navigate(`/__/auth/action${location.search}`, { replace: true });
       }

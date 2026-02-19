@@ -8,6 +8,7 @@ const EmailAction = () => {
   const auth = getAuth();
   const [status, setStatus] = useState('loading'); 
   const [message, setMessage] = useState('');
+  const [actionMode, setActionMode] = useState('');
   const [oobCodeState, setOobCodeState] = useState(null);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,6 +21,7 @@ const EmailAction = () => {
       const params = new URLSearchParams(location.search);
       const mode = params.get('mode');
       const oobCode = params.get('oobCode');
+      setActionMode(mode || '');
       setOobCodeState(oobCode);
 
       if (!oobCode) {
@@ -189,9 +191,11 @@ const EmailAction = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Senha Atualizada! <span className="text-green-600">✓</span></h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              {actionMode === 'verifyEmail' ? 'Email Verificado!' : 'Senha Atualizada!'} <span className="text-green-600">✓</span>
+            </h2>
             <p className="text-gray-700 mb-4">{message}</p>
-            <p className="text-sm text-gray-500">Redirecionando para o login...</p>
+            <p className="text-sm text-gray-500">Redirecionando...</p>
           </>
         )}
 

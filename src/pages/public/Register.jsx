@@ -5,7 +5,7 @@ import { createUserProfile } from '../../services/userService';
 import { sendEmailVerification } from 'firebase/auth';
 
 const Register = () => {
-  const { register } = useAuth();
+  const { register, logout } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nome: '',
@@ -89,6 +89,14 @@ const Register = () => {
           } catch (emailError) {
             console.error('❌ Erro ao enviar email:', emailError);
           }
+
+          try {
+            localStorage.removeItem('email_verification_done');
+          } catch {
+            // ignora
+          }
+
+          await logout();
 
           // Redirecionar para página de verificação
           navigate('/verify-email');

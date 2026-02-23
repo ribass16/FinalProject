@@ -75,11 +75,19 @@ const Filters = ({ filters, setFilters, cars }) => {
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-3 text-center">Intervalo de Preço</label>
           <div className="flex gap-2 items-center">
-            <input type="number" min="0" max={maxPrice} value={filters.priceRange?.min} onChange={(e) => handlePriceChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" />
+            <input type="number" min="0" max={maxPrice} value={filters.priceRange?.min === 0 ? '' : filters.priceRange?.min} onChange={(e) => handlePriceChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" />
             <span className="text-gray-400">-</span>
             <input type="number" min="0" max={maxPrice} value={filters.priceRange?.max === Infinity ? '' : filters.priceRange?.max} onChange={(e) => handlePriceChange('max', e.target.value)} placeholder="Max" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" />
           </div>
-          <div className="text-xs text-gray-500 mt-2 text-center">€{filters.priceRange?.min?.toLocaleString()} - {filters.priceRange?.max === Infinity ? "Sem limite" : `€${filters.priceRange?.max?.toLocaleString()}`}</div>
+          <div className="text-xs text-gray-500 mt-2 text-center">
+            {filters.priceRange?.min === 0 && filters.priceRange?.max === Infinity
+              ? ''
+              : filters.priceRange?.min === 0
+                ? `Até €${filters.priceRange?.max?.toLocaleString()}`
+                : filters.priceRange?.max === Infinity
+                  ? `Desde €${filters.priceRange?.min?.toLocaleString()}`
+                  : `€${filters.priceRange?.min?.toLocaleString()} - €${filters.priceRange?.max?.toLocaleString()}`}
+          </div>
         </div>
       </div>
 
@@ -87,7 +95,7 @@ const Filters = ({ filters, setFilters, cars }) => {
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-3 text-center">Ano (mín – máx)</label>
           <div className="flex gap-2">
-            <input type="number" min="1900" max={currentYear} value={filters.yearRange?.min} onChange={(e) => handleYearChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
+            <input type="number" min="1900" max={currentYear} value={filters.yearRange?.min === 0 ? '' : filters.yearRange?.min} onChange={(e) => handleYearChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
             <span className="text-gray-400">-</span>
             <input type="number" min="1900" max={currentYear} value={filters.yearRange?.max === Infinity ? '' : filters.yearRange?.max} onChange={(e) => handleYearChange('max', e.target.value)} placeholder="Max" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
           </div>
@@ -96,7 +104,7 @@ const Filters = ({ filters, setFilters, cars }) => {
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-3 text-center">Quilometragem (mín – máx)</label>
           <div className="flex gap-2">
-            <input type="number" min="0" value={filters.mileageRange?.min} onChange={(e) => handleMileageChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
+            <input type="number" min="0" value={filters.mileageRange?.min === 0 ? '' : filters.mileageRange?.min} onChange={(e) => handleMileageChange('min', e.target.value)} placeholder="Min" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
             <span className="text-gray-400">-</span>
             <input type="number" min="0" value={filters.mileageRange?.max === Infinity ? '' : filters.mileageRange?.max} onChange={(e) => handleMileageChange('max', e.target.value)} placeholder="Max" className="w-1/2 px-3 py-3 border-2 border-gray-300 rounded-xl" />
           </div>

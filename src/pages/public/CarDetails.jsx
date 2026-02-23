@@ -18,6 +18,11 @@ import {
   Flag,
 } from "lucide-react";
 import RoadIcon from "../../components/icons/RoadIcon";
+import {
+  getCarGalleryImages,
+  getPrimaryCarImage,
+  handleCarImageError,
+} from "../../utils/imageUtils";
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -119,6 +124,8 @@ const CarDetails = () => {
     { label: "Origem", value: formatText(car.origin), icon: <Flag className="w-5 h-5 text-gray-900" /> },
   ];
 
+  const galleryImages = getCarGalleryImages(car);
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4">
@@ -138,18 +145,19 @@ const CarDetails = () => {
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
               {/* Imagem Principal */}
-              {car.images && car.images.length > 0 ? (
+              {galleryImages.length > 0 ? (
                 <div className="relative">
                   <img
-                    src={car.images[selectedImage]}
+                    src={galleryImages[selectedImage] || getPrimaryCarImage(car)}
                     alt={`${car.brand} ${car.model} - Imagem ${selectedImage + 1}`}
+                    onError={handleCarImageError}
                     className="w-full h-[500px] object-cover"
                   />
                   {/* Setas de navegação */}
-                  {car.images.length > 1 && (
+                  {galleryImages.length > 1 && (
                     <>
                       <button
-                        onClick={() => setSelectedImage(selectedImage === 0 ? car.images.length - 1 : selectedImage - 1)}
+                        onClick={() => setSelectedImage(selectedImage === 0 ? galleryImages.length - 1 : selectedImage - 1)}
                         className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +165,7 @@ const CarDetails = () => {
                         </svg>
                       </button>
                       <button
-                        onClick={() => setSelectedImage(selectedImage === car.images.length - 1 ? 0 : selectedImage + 1)}
+                        onClick={() => setSelectedImage(selectedImage === galleryImages.length - 1 ? 0 : selectedImage + 1)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,17 +174,11 @@ const CarDetails = () => {
                       </button>
                       {/* Contador de imagens */}
                       <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {selectedImage + 1} / {car.images.length}
+                        {selectedImage + 1} / {galleryImages.length}
                       </div>
                     </>
                   )}
                 </div>
-              ) : car.image ? (
-                <img
-                  src={car.image}
-                  alt={`${car.brand} ${car.model}`}
-                  className="w-full h-[500px] object-cover"
-                />
               ) : (
                 <div className="w-full h-[500px] bg-gray-200 flex items-center justify-center">
                   <svg className="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,9 +189,9 @@ const CarDetails = () => {
             </div>
 
             {/* Miniaturas */}
-            {car.images && car.images.length > 1 && (
+            {galleryImages.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
-                {car.images.map((img, index) => (
+                {galleryImages.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -202,6 +204,7 @@ const CarDetails = () => {
                     <img
                       src={img}
                       alt={`Miniatura ${index + 1}`}
+                      onError={handleCarImageError}
                       className="w-full h-20 object-cover"
                     />
                   </button>

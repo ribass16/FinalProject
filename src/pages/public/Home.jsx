@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { subscribeAutomoveis } from "../../services/firestoreService";
 import CarCard from "../../components/public/CarCard";
 import ReviewsSection from "../../components/ReviewsSection";
+import { getPrimaryCarImage, handleCarImageError } from "../../utils/imageUtils";
 
 const Home = () => {
   const [featuredCars, setFeaturedCars] = useState([]);
@@ -144,12 +145,10 @@ const Home = () => {
                         <div className="relative bg-gray-50 h-64 sm:h-[360px] md:h-[500px] flex items-center justify-center">
                           {/* Imagem do Carro */}
                           <img
-                            src={car.image || "https://via.placeholder.com/1200x675?text=Sem+Imagem"}
+                            src={getPrimaryCarImage(car)}
                             alt={`${car.brand} ${car.model}`}
                             className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.src = "https://via.placeholder.com/1200x675?text=Imagem+Indisponível";
-                            }}
+                            onError={handleCarImageError}
                           />
 
                           {/* Informações sobre a imagem */}

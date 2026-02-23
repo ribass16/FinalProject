@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { subscribeAutomoveis, deleteAutomovel } from "../services/firestoreService";
 import { useNavigate } from "react-router-dom";
+import { getPrimaryCarImage, handleCarImageError } from "../utils/imageUtils";
 
 const CarsManagement = () => {
   const [cars, setCars] = useState([]);
@@ -100,11 +101,12 @@ const CarsManagement = () => {
             filteredCars.map((car) => (
               <div key={car.id} className="border border-gray-100 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {car.image ? (
-                    <img src={car.image} alt={`${car.brand} ${car.model}`} className="w-16 h-12 object-cover rounded-md" />
-                  ) : (
-                    <div className="w-16 h-12 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-400">Sem foto</div>
-                  )}
+                  <img
+                    src={getPrimaryCarImage(car)}
+                    alt={`${car.brand} ${car.model}`}
+                    onError={handleCarImageError}
+                    className="w-16 h-12 object-cover rounded-md"
+                  />
                   <div>
                     <div className="text-sm font-semibold text-gray-900">{car.brand} {car.model}</div>
                     <div className="text-xs text-gray-500">{car.year} • €{car.price?.toLocaleString()}</div>
@@ -165,17 +167,12 @@ const CarsManagement = () => {
                 filteredCars.map((car) => (
                   <tr key={car.id} className="hover:bg-gray-50 transition">
                     <td className="px-4 py-3">
-                      {car.image ? (
-                        <img
-                          src={car.image}
-                          alt={`${car.brand} ${car.model}`}
-                          className="w-12 h-12 object-cover rounded-md"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-400">
-                          Sem foto
-                        </div>
-                      )}
+                      <img
+                        src={getPrimaryCarImage(car)}
+                        alt={`${car.brand} ${car.model}`}
+                        onError={handleCarImageError}
+                        className="w-12 h-12 object-cover rounded-md"
+                      />
                     </td>
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">
                       {car.brand}

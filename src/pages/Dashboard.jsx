@@ -3,6 +3,7 @@ import { subscribeAutomoveis } from "../services/firestoreService";
 import { subscribeAgendamentos } from "../services/appointmentService";
 import { useAuth } from '../contexts/authContextObject';
 import { useNavigate } from "react-router-dom";
+import { getPrimaryCarImage, handleCarImageError } from "../utils/imageUtils";
 
 const Dashboard = () => {
   const [cars, setCars] = useState([]);
@@ -92,10 +93,10 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Agendamentos Pendentes</p>
-              <p className="mt-2 text-3xl font-bold text-orange-600">{pendingAgendamentos}</p>
+              <p className="mt-2 text-3xl font-bold text-orange-500">{pendingAgendamentos}</p>
             </div>
             <div className="bg-orange-50 p-3 rounded-lg">
-              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
@@ -152,17 +153,12 @@ const Dashboard = () => {
                   onClick={() => navigate("/admin/cars")}
                 >
                   <div className="flex items-center gap-3">
-                    {car.image ? (
-                      <img
-                        src={car.image}
-                        alt={car.brand}
-                        className="w-12 h-12 object-cover rounded-md"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center">
-                        <span className="text-gray-400 text-xs">Sem foto</span>
-                      </div>
-                    )}
+                    <img
+                      src={getPrimaryCarImage(car)}
+                      alt={car.brand}
+                      onError={handleCarImageError}
+                      className="w-12 h-12 object-cover rounded-md"
+                    />
                     <div>
                       <p className="font-medium text-sm text-gray-900">
                         {car.brand} {car.model}

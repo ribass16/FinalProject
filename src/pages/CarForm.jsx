@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { addAutomovel, updateAutomovel } from "../services/firestoreService";
 import { uploadMultipleImages } from "../services/imgbbService";
+import { handleCarImageError } from "../utils/imageUtils";
 
 const CarForm = () => {
   const navigate = useNavigate();
@@ -130,89 +131,110 @@ const CarForm = () => {
     if (imageFiles.length > 0) {
       const newFiles = Array.from(imageFiles).filter((_, i) => i !== index);
       setImageFiles(newFiles);
+      return;
     }
+
+    setFormData((prev) => {
+      const newImages = Array.isArray(prev.images)
+        ? prev.images.filter((_, i) => i !== index)
+        : [];
+
+      return {
+        ...prev,
+        images: newImages,
+        image: newImages[0] || "",
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Validacao 
-    if (!formData.brand || !formData.model || !formData.price) {
-      alert("Por favor, preencha os campos obrigatórios: Marca, Modelo e Preço");
-      setLoading(false);
-      return;
-    }
+    try {
 
-    // ve se tem 17 caracteres no VIN 
-    if (formData.vin) {
-      const valid = validateField('vin', formData.vin);
-      if (!valid) {
-        alert('Corrija os erros do formulário antes de submeter.');
-        setLoading(false);
+      // Validacao 
+      if (!formData.brand || !formData.model || !formData.price) {
+        alert("Por favor, preencha os campos obrigatórios: Marca, Modelo e Preço");
         return;
       }
-    }
 
-    let imageUrls = [...(formData.images || [])];
-
-    // Se houver ficheiros para upload, fazer upload primeiro
-    if (imageFiles.length > 0) {
-      setUploadProgress(true);
-      
-      const uploadResult = await uploadMultipleImages(imageFiles);
-      setUploadProgress(false);
-      
-      if (uploadResult.success) {
-        imageUrls = uploadResult.urls;
-        
-        if (uploadResult.failed > 0) {
-          alert(`${uploadResult.failed} de ${uploadResult.total} imagens falharam. Continuando com as restantes.`);
+      // ve se tem 17 caracteres no VIN 
+      if (formData.vin) {
+        const valid = validateField('vin', formData.vin);
+        if (!valid) {
+          alert('Corrija os erros do formulário antes de submeter.');
+          return;
         }
-      } else {
-        alert('Erro ao fazer upload: ' + (uploadResult.errors ? uploadResult.errors.join(', ') : 'Erro desconhecido'));
-        setLoading(false);
-        return;
       }
-    }
 
-    // Compatibilidade: usar primeira imagem como 'image' principal
-    const mainImage = imageUrls[0] || formData.image || "";
+      let imageUrls = [...(formData.images || [])];
 
-    const parseIntOrNull = (value) => {
-      if (value === "" || value === null || value === undefined) return null;
-      const parsed = parseInt(value, 10);
-      return Number.isNaN(parsed) ? null : parsed;
-    };
+      // se houber imagens para upload converter para base64 e fazer upload
+      if (imageFiles.length > 0) {
+        setUploadProgress(true);
+        let uploadResult;
 
-    const carData = {
-      ...formData,
-      price: parseFloat(formData.price),
-      year: parseInt(formData.year, 10),
-      mileage: parseIntOrNull(formData.mileage),
-      engineCapacity: parseIntOrNull(formData.engineCapacity),
-      seats: parseIntOrNull(formData.seats),
-      power: parseIntOrNull(formData.power),
-      doors: parseIntOrNull(formData.doors),
-      bodyType: formData.bodyType || formData.category,
-      image: mainImage,
-      images: imageUrls,
-    };
+        try {
+          uploadResult = await uploadMultipleImages(imageFiles);
+        } finally {
+          setUploadProgress(false);
+        }
 
-    let result;
-    if (isEditMode) {
-      result = await updateAutomovel(id, carData);
-    } else {
-      result = await addAutomovel(carData);
-    }
+        if (uploadResult.success) {
+          imageUrls = uploadResult.urls;
 
-    setLoading(false);
+          if (uploadResult.failed > 0) {
+            alert(`${uploadResult.failed} de ${uploadResult.total} imagens falharam. Continuando com as restantes.`);
+          }
+        } else {
+          alert('Erro ao processar imagens: ' + (uploadResult.errors ? uploadResult.errors.join(', ') : 'Erro desconhecido'));
+          return;
+        }
+      }
 
-    if (result.success) {
-      alert(isEditMode ? "Carro atualizado com sucesso!" : "Carro adicionado com sucesso!");
-      navigate("/admin/cars");
-    } else {
-      alert("Erro: " + result.error);
+      // Compatibilidade: usar primeira imagem como 'image' principal
+      const mainImage = imageUrls[0] || formData.image || "";
+
+      const parseIntOrNull = (value) => {
+        if (value === "" || value === null || value === undefined) return null;
+        const parsed = parseInt(value, 10);
+        return Number.isNaN(parsed) ? null : parsed;
+      };
+
+      const carData = {
+        ...formData,
+        price: parseFloat(formData.price),
+        year: parseInt(formData.year, 10),
+        mileage: parseIntOrNull(formData.mileage),
+        engineCapacity: parseIntOrNull(formData.engineCapacity),
+        seats: parseIntOrNull(formData.seats),
+        power: parseIntOrNull(formData.power),
+        doors: parseIntOrNull(formData.doors),
+        bodyType: formData.bodyType || formData.category,
+        image: mainImage,
+        images: imageUrls,
+      };
+
+      let result;
+      if (isEditMode) {
+        result = await updateAutomovel(id, carData);
+      } else {
+        result = await addAutomovel(carData);
+      }
+
+      if (result.success) {
+        alert(isEditMode ? "Carro atualizado com sucesso!" : "Carro adicionado com sucesso!");
+        navigate("/admin/cars");
+      } else {
+        alert("Erro: " + result.error);
+      }
+    } catch (error) {
+      console.error("Erro no submit do carro:", error);
+      alert(error?.message || "Ocorreu um erro inesperado ao submeter o carro.");
+    } finally {
+      setUploadProgress(false);
+      setLoading(false);
     }
   };
 
@@ -528,9 +550,7 @@ const CarForm = () => {
                         src={preview}
                         alt={`Preview ${index + 1}`}
                         className="w-full h-32 object-cover rounded-lg shadow-sm"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                        }}
+                        onError={handleCarImageError}
                       />
                       <button
                         type="button"
@@ -585,7 +605,7 @@ const CarForm = () => {
               disabled={loading || uploadProgress}
               className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-lg transition-all hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none"
             >
-              {uploadProgress ? "A fazer upload das imagens..." : loading ? "A processar..." : isEditMode ? "Atualizar Carro" : "Adicionar Carro"}
+              {uploadProgress ? "A processar imagens..." : loading ? "A guardar..." : isEditMode ? "Atualizar Carro" : "Adicionar Carro"}
             </button>
             <button
               type="button"

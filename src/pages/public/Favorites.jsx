@@ -4,6 +4,7 @@ import { subscribeFavoritos, removeFavorito } from '../../services/favoritesServ
 import { subscribeAutomoveis } from '../../services/firestoreService';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/public/PublicLayout';
+import { getPrimaryCarImage, handleCarImageError } from '../../utils/imageUtils';
 
 const Favoritos = () => {
   const { user } = useAuth();
@@ -83,8 +84,9 @@ const Favoritos = () => {
               <div key={carro.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                 <div className="relative">
                   <img
-                    src={carro.image || (carro.images && carro.images[0]) || 'https://via.placeholder.com/400x300?text=Sem+Imagem'}
+                    src={getPrimaryCarImage(carro)}
                     alt={`${carro.brand} ${carro.model}`}
+                    onError={handleCarImageError}
                     className="w-full h-56 object-cover"
                   />
                   <button

@@ -101,7 +101,7 @@ const Register = () => {
           // Redirecionar para página de verificação
           navigate('/verify-email');
         } else {
-          navigate('/dashboard'); // Redirect admin directly to dashboard
+          navigate('/dashboard'); 
         }
       } else {
         alert('Erro ao criar conta: ' + result.error);

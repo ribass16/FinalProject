@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { subscribeAgendamentos } from '../services/appointmentService';
 import { subscribeAutomoveis } from '../services/firestoreService';
+import { getPrimaryCarImage, handleCarImageError } from '../utils/imageUtils';
 
 const HOURS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
 
@@ -311,15 +312,14 @@ const Calendario = () => {
                                   className={`${style.bg} ${style.border} border-l-4 rounded-lg p-2 cursor-pointer hover:shadow-lg transition-all`}
                                 >
                                   <div className="flex gap-2 items-start">
-                                    {car.image && (
-                                      <div className="w-12 h-10 flex-shrink-0 overflow-hidden rounded">
-                                        <img 
-                                          src={car.image} 
-                                          alt={`${car.brand} ${car.model}`}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      </div>
-                                    )}
+                                    <div className="w-12 h-10 flex-shrink-0 overflow-hidden rounded">
+                                      <img 
+                                        src={getPrimaryCarImage(car)} 
+                                        alt={`${car.brand} ${car.model}`}
+                                        onError={handleCarImageError}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-2 mb-1">
                                         <span className="text-sm">{style.icon}</span>
@@ -400,15 +400,14 @@ const Calendario = () => {
                 
                 return (
                   <>
-                    {car.image && (
-                      <div className="w-full h-48 rounded-xl overflow-hidden">
-                        <img 
-                          src={car.image} 
-                          alt={`${car.brand} ${car.model}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
+                    <div className="w-full h-48 rounded-xl overflow-hidden">
+                      <img 
+                        src={getPrimaryCarImage(car)} 
+                        alt={`${car.brand} ${car.model}`}
+                        onError={handleCarImageError}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
                     <div className={`${style.bg} ${style.border} border-l-4 rounded-xl p-4`}>
                       <div className="flex items-center gap-2 mb-2">

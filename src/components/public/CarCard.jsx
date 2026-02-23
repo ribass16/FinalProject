@@ -4,11 +4,13 @@ import { useAuth } from "../../contexts/authContextObject";
 import { addFavorito, removeFavorito, isFavorito } from "../../services/favoritesService";
 import { Calendar, Fuel } from "lucide-react";
 import RoadIcon from "../icons/RoadIcon";
+import { getPrimaryCarImage, handleCarImageError } from "../../utils/imageUtils";
 
 const CarCard = ({ car }) => {
   const { user, userProfile } = useAuth();
   const [favoritoState, setFavoritoState] = useState(false);
   const [loading, setLoading] = useState(false);
+  const imageUrl = getPrimaryCarImage(car);
 
   useEffect(() => {
     if (user && userProfile?.role === 'cliente') {
@@ -56,17 +58,12 @@ const CarCard = ({ car }) => {
       className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 group"
     >
       <div className="relative h-56 overflow-hidden bg-gray-200">
-        {car.image ? (
-          <img
-            src={car.image}
-            alt={`${car.brand} ${car.model}`}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl">
-            🚗
-          </div>
-        )}
+        <img
+          src={imageUrl}
+          alt={`${car.brand} ${car.model}`}
+          onError={handleCarImageError}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
         
         <div className="absolute top-4 right-4 flex gap-2">
           {user && userProfile?.role === 'cliente' && (
